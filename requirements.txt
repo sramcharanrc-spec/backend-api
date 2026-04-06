@@ -11,3 +11,4 @@ boto3
 langgraph
 python-dotenv
 pydantic
+reportlab
