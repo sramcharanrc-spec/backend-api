@@ -1,0 +1,134 @@
+/* entrance */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+.fade-up { animation: fadeInUp 0.8s ease forwards; }
+
+/* ====== ROAD BUTTON ====== */
+.button-track {
+  position: relative; width: 260px; height: 70px; border-radius: 9999px;
+  background: linear-gradient(90deg,#11193F 0%,#1A237E 100%);
+  overflow: hidden; cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35); border: 1px solid rgba(0,0,0,0.06);
+}
+.button-track::before {
+  content:""; position:absolute; top:50%; left:0; width:100%; height:4px;
+  background:repeating-linear-gradient(90deg,#fff 0 8px,transparent 8px 16px);
+  transform:translateY(-50%); opacity:.35;
+}
+.button-label {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  color:#fff; font-weight:700; letter-spacing:.4px; text-transform:uppercase;
+  pointer-events:none; font-size:.95rem;
+}
+
+/* BOT runs RIGHT -> LEFT */
+.robot { position:absolute; top:50%; left:calc(100% - 60px); width:60px; height:60px; transform:translateY(-50%); display:block; }
+.robot svg { width:60px; height:60px; display:block; }
+.drive { animation: driveRL 1.6s cubic-bezier(.65,0,.35,1) 1; }
+@keyframes driveRL { 0%{ left: calc(100% - 60px) } 100%{ left:-60px } }
+
+/* FLYING clone + landing ripple */
+.fly-bot { position:absolute; width:60px; height:60px; transform:translate(-50%, -50%); z-index:30; pointer-events:none; }
+@keyframes landPulse { from { box-shadow: 0 0 0 0 rgba(59,130,246,.45); opacity:.9 } to { box-shadow: 0 0 0 28px rgba(59,130,246,0); opacity:0 } }
+.ripple {
+  position:absolute; width:28px; height:14px; left:0; bottom:0; transform:translate(-50%, 0);
+  background: radial-gradient(40% 60% at 50% 50%, rgba(59,130,246,.55), rgba(59,130,246,0));
+  border-radius:9999px; opacity:0;
+}
+.ripple.show { animation: landPulse 520ms ease-out 1 forwards; }
+
+/* TRAIL */
+@keyframes trailFade { 0% { transform: translate(-50%, -50%) scale(.9); opacity: .6; } 100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; } }
+.trail-dot {
+  position:absolute; width:8px; height:8px; border-radius:9999px;
+  background: radial-gradient(circle at 40% 40%, rgba(99,102,241,.9), rgba(59,130,246,.3));
+  filter: blur(.5px); pointer-events:none; animation: trailFade .7s ease-out forwards;
+}
+.trail-dot.air {
+  width:6px; height:6px;
+  background: radial-gradient(circle at 40% 40%, rgba(56,189,248,.9), rgba(99,102,241,.25));
+  animation-duration: .9s;
+}
+
+/* LIGHT AI BACKGROUND */
+.bg-ai { position: relative; }
+.bg-ai::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+  background-image:
+    linear-gradient(to right, rgba(59,130,246,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59,130,246,0.06) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px;
+}
+.bg-ai::after {
+  content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(900px 600px at 15% 10%, rgba(59,130,246,0.18), transparent 60%),
+    radial-gradient(800px 600px at 85% 90%, rgba(99,102,241,0.16), transparent 60%),
+    linear-gradient(180deg, #F8FBFF 0%, #F4F7FF 40%, #FFFFFF 100%);
+}
+
+/* CIRCUITS + MESH */
+@keyframes dashFlow { to { stroke-dashoffset: -400; } }
+.ai-circuit, .ai-mesh { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+.ai-circuit { opacity: .6; transition: opacity .4s ease, filter .4s ease; }
+.ai-mesh { opacity: .35; transition: opacity .4s ease; }
+.ai-circuit.glow { opacity: 1; filter: drop-shadow(0 0 12px rgba(59,130,246,.35)); }
+.ai-circuit.glow svg path { stroke: rgba(14,165,233,0.5); }
+.ai-mesh.glow { opacity: .6; }
+.ai-circuit svg path {
+  stroke: rgba(14,165,233,0.25); stroke-width: 1.2; fill: none; stroke-linecap: round;
+  stroke-dasharray: 6 10; animation: dashFlow 12s linear infinite;
+}
+.ai-circuit svg circle { fill: rgba(99,102,241,0.18); }
+.ai-mesh {
+  mask-image: radial-gradient(60% 60% at 50% 50%, #000 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(60% 60% at 50% 50%, #000 60%, transparent 100%);
+}
+.ai-mesh::before {
+  content:""; position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(115deg, rgba(99,102,241,0.10) 0 2px, transparent 2px 26px),
+    repeating-linear-gradient(65deg, rgba(14,165,233,0.08) 0 2px, transparent 2px 22px);
+  filter: blur(0.2px);
+}
+/* --- fallback layout to ensure cards render even if Tailwind isn't loaded --- */
+#shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  background: #fff;               /* visible frame */
+  border: 1px solid rgba(15,23,42,.12);
+  border-radius: 24px;
+  overflow: hidden;
+  max-width: 1000px;
+  width: 96%;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.25);
+}
+@media (min-width: 768px) {
+  #shell { grid-template-columns: 1fr 1fr; }
+}
+
+#leftPanel, .right-panel-shell {
+  min-height: 480px;              /* card height */
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px;
+}
+
+#leftPanel { background: #ffffff; color: #0f172a; }
+.right-panel-shell { background: #0b1440; color: #e5e7eb; position: relative; }
+
+.right-panel-shell .divider {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,.12);
+}
+
+/* Make inputs readable if Tailwind utilities are missing */
+#leftPanel input[type="email"],
+#leftPanel input[type="password"],
+#leftPanel input[type="text"] {
+  width: 100%; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid #e5e7eb; margin-top: 6px;
+}
+
+#leftPanel button[type="submit"],
+.right-panel-shell .button-track {
+  margin-top: 8px;
+}

@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* optional: app-wide resets */
+html, body, #root { height: 100%; }

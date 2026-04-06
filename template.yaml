@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AgenticAI FastAPI (Mangum) deployed to Lambda + API Gateway
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 30
+    MemorySize: 512
+
+Resources:
+  FastApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: agenticai-fastapi
+      Handler: lambda_handler.handler
+      CodeUri: .
+      AutoPublishAlias: live
+      Environment:
+        Variables:
+          # Add any environment variables you need here:
+          # EXAMPLE: CLAIMS_TABLE: AgenticAI_Claims
+          # S3_BUCKET: my-ehr-bucket
+          # Add more in deployments or via Console
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        # If you use DynamoDB, S3, add these SAM policy templates OR custom inline policy
+        # - DynamoDBCrudPolicy:
+        #     TableName: AgenticAI_Claims
+        # - S3ReadPolicy:
+        #     BucketName: your-bucket-name
+      Events:
+        ApiProxy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId: !Ref ApiGateway
+
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: AgenticAI-FastAPI-Api
+      StageName: prod
+      Cors:
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+Outputs:
+  ApiUrl:
+    Description: "Invoke URL for the API"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

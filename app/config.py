@@ -1,0 +1,1 @@
+BUCKET_NAME = "ehr-claims-bucket-agenticai"

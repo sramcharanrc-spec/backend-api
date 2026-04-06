@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AgenticAI FastAPI (Mangum) deployed to Lambda + API Gateway
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 30
+    MemorySize: 512
+Resources:
+  FastApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: agenticai-fastapi
+      Handler: lambda_handler.handler
+      CodeUri: FastApiFunction
+      AutoPublishAlias: live
+      Environment:
+        Variables: null
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      Events:
+        ApiProxy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId:
+              Ref: ApiGateway
+    Metadata:
+      SamResourceId: FastApiFunction
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: AgenticAI-FastAPI-Api
+      StageName: prod
+      Cors:
+        AllowMethods: '''OPTIONS,GET,POST,PUT,DELETE'''
+        AllowHeaders: '''Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'''
+        AllowOrigin: '''*'''
+Outputs:
+  ApiUrl:
+    Description: Invoke URL for the API
+    Value:
+      Fn::Sub: https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod

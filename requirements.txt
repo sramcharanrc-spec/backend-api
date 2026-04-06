@@ -1,0 +1,13 @@
+fastapi==0.100.0
+mangum==0.19.0
+uvicorn==0.23.2
+boto3
+python-multipart
+pydantic
+# add other libs your app requires (pandas, openpyxl, numpy, etc.)
+fastapi
+uvicorn
+boto3
+langgraph
+python-dotenv
+pydantic

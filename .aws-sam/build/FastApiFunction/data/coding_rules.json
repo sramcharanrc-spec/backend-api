@@ -1,0 +1,12 @@
+{
+  "icd_rules": [
+    { "pattern": "type 2 diabetes|t2dm|dm2|diabetes mellitus", "icd": "E11.9", "desc": "Type 2 diabetes mellitus without complications" },
+    { "pattern": "hypertension|high blood pressure|htn", "icd": "I10", "desc": "Essential (primary) hypertension" },
+    { "pattern": "asthma|wheezing", "icd": "J45.909", "desc": "Unspecified asthma, uncomplicated" },
+    { "pattern": "annual physical|wellness", "icd": "Z00.00", "desc": "Encounter for adult medical exam w/o abnormal findings" }
+  ],
+  "cpt_rules": [
+    { "when_icd_prefix": "E11", "visit": "established", "cpt": "99214", "desc": "Office visit, established, moderate" },
+    { "when_icd_prefix": "I10", "visit": "established", "cpt": "99213", "desc": "Office visit, established, low" }
+  ]
+}
