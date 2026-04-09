@@ -141,6 +141,7 @@ from app.agents.base.base_agent import BaseAgent
 from app.websocket.manager import manager
 from app.services.audit_service import log_audit
 from app.orchestrator.case_orchestrator import build_case_record
+from app.intake.db_service import update_case
 
 class ValidationAgent(BaseAgent):
 
@@ -196,6 +197,7 @@ class ValidationAgent(BaseAgent):
 
                 # 🔥 CREATE CASE HERE (FIX)
                 case = build_case_record(claim)
+                update_case(claim.get("claim_id"), case)
 
                 log_audit(
                     claim.get("claim_id"),

@@ -114,14 +114,17 @@ def get_record_by_id(record_id):
 # 🔹 UPDATE CLAIM
 # -------------------------
 def update_claim_data(claim_id, updated_claim):
-    table.update_item(
-        Key={"claim_id": claim_id},
-        UpdateExpression="SET #c = :c",
-        ExpressionAttributeNames={"#c": "claim"},
-        ExpressionAttributeValues={
-            ":c": convert_floats_to_decimal(updated_claim)
-        }
-    )
+    try:
+        table.update_item(
+            Key={"claim_id": claim_id},
+            UpdateExpression="SET #c = :c",
+            ExpressionAttributeNames={"#c": "claim"},
+            ExpressionAttributeValues={
+                ":c": convert_floats_to_decimal(updated_claim)
+            }
+        )
+    except Exception as e:
+        print("❌ DB Error during update_claim_data:", str(e))
 
 
 # -------------------------
@@ -146,11 +149,14 @@ def update_record_status(claim_id, status):
 # 🔹 UPDATE CASE
 # -------------------------
 def update_case(claim_id, case_data):
-    table.update_item(
-        Key={"claim_id": claim_id},
-        UpdateExpression="SET #c = :c",
-        ExpressionAttributeNames={"#c": "case"},
-        ExpressionAttributeValues={
-            ":c": convert_floats_to_decimal(case_data)
-        }
-    )
+    try:
+        table.update_item(
+            Key={"claim_id": claim_id},
+            UpdateExpression="SET #c = :c",
+            ExpressionAttributeNames={"#c": "case"},
+            ExpressionAttributeValues={
+                ":c": convert_floats_to_decimal(case_data)
+            }
+        )
+    except Exception as e:
+        print("❌ DB Error during update_case:", str(e))

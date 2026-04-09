@@ -12,6 +12,7 @@ from app.utils.response_helper import success_response
 from app.utils.response_builder import build_clean_response
 from app.intake.db_service import get_record_by_id as fetch_record_from_db
 from app.orchestrator.case_orchestrator import calculate_sla
+from app.intake.db_service import save_record
 from app.services.feedback.feedback_store import store_feedback
 from app.intake.db_service import update_record_status
 from app.services.audit_service import (
@@ -226,70 +227,43 @@ async def fix_case(claim_id: str, updated_data: dict):
     log_audit(claim_id, "fix", "user_updated", updated_data)
 
     # -------------------------
-    # RESET PIPELINE (🔥 FIX)
+    # RESET PIPELINE (🔥 CORRECT)
     # -------------------------
-    state = {
-        "claim": copy.deepcopy(claim),
-        "status": "READY",
-        "stage": "resume",
+    record["claim"] = claim
 
-        "validation": {
-            "valid": True,
-            "status": "passed",
-            "errors": []
-        },
-
-        "pipeline": {
-            "steps": {
-                "case_orchestrated": True,
-                "eligibility_checked": True,
-                "rules_validated": False,
-                "submitted": False,
-                "denial_checked": False,
-                "paid": False,
-                "analytics_done": False
-            }
-        }
+    record["pipeline"]["steps"] = {
+        "case_orchestrated": True,
+        "eligibility_checked": True,
+        "rules_validated": False,
+        "submitted": False,
+        "acknowledged": False,
+        "denial_checked": False,
+        "paid": False,
+        "analytics_done": False
     }
 
-    print("👉 Restarting pipeline...")
-
-    result = await asyncio.wait_for(
-        rcm_graph.ainvoke(state),
-        timeout=30
-    )
-
-    if not isinstance(result, dict):
-        result = state
-
-    print("✅ Pipeline finished")
+    record["status"] = "READY_FOR_APPROVAL"
 
     # -------------------------
-    # UPDATE CASE
+    # UPDATE CASE STATUS
     # -------------------------
     case = record.get("case", {})
-    case["status"] = "RESUMED"
+    case["status"] = "UPDATED"
 
-    update_case(claim_id, {
-        "claim": claim,
-        "pipeline": result.get("pipeline", {}),
-        "case": case,
-        "status": "COMPLETED",
-        "denial": result.get("denial_risk"),
-        "payment": result.get("financials")
-    })
+    save_record(record)
 
     # -------------------------
-    # WEBSOCKET
+    # WEBSOCKET (optional)
     # -------------------------
     await manager.broadcast({
-        "event": "pipeline_update",
-        "claim_id": claim_id,
-        "stage": result.get("stage"),
-        "pipeline": result.get("pipeline", {})
+        "event": "case_updated",
+        "claim_id": claim_id
     })
 
-    return build_clean_response(result)
+    return {
+        "message": "Case updated successfully. Ready for approval.",
+        "status": record["status"]
+    }
 
 
 # =========================

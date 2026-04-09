@@ -8,27 +8,57 @@ router = APIRouter()
 BUCKET = "ehr-claims-bucket-agenticai"
 
 
+# @router.post("/upload")
+# async def upload(file: UploadFile = File(...)):
+
+#     if not file:
+#         raise HTTPException(status_code=400, detail="No file provided")
+
+#     filename = f"uploads/{file.filename}"
+
+#     print("📤 Uploading:", filename)
+
+#     try:
+#         # 1️⃣ Upload to S3
+#         upload_file(file.file, filename)
+
+#         print("✅ Uploaded to:", filename)
+
+#         # 2️⃣ Process document
+#         print("📄 Processing document:", BUCKET, filename)
+
+#         result = await process_document(BUCKET, filename)
+
+#         # 🔥 CLEAN RESPONSE HERE
+#         # clean_response = build_clean_response(result)
+
+#         return result
+
+#     except Exception as e:
+#         print("❌ Upload Error:", str(e))
+#         raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/upload")
 async def upload(file: UploadFile = File(...)):
 
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
 
-    filename = f"uploads/{file.filename}"
+    filename = file.filename
+    s3_key = f"uploads/{filename}"
 
-    print("📤 Uploading:", filename)
+    print("📤 Uploading:", s3_key)
 
     try:
         # 1️⃣ Upload to S3
-        upload_file(file.file, filename)
+        upload_file(file.file, s3_key)
 
-        print("✅ Uploaded to:", filename)
+        print("✅ Uploaded to:", s3_key)
 
         # 2️⃣ Process document
-        result = await process_document(BUCKET, filename)
+        print("📄 Processing document:", BUCKET, s3_key)
 
-        # 🔥 CLEAN RESPONSE HERE
-        # clean_response = build_clean_response(result)
+        result = await process_document(BUCKET, s3_key)
 
         return result
 

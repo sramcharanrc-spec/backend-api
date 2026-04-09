@@ -26,7 +26,10 @@ def get_records(summary: bool = True):
             if summary:
                 patient = clean.get("claim", {}).get("patient", {})
                 risk = clean.get("ai", {}).get("risk_score")
-                status = clean.get("pipeline", {}).get("stage")
+
+                # ✅ FIX HERE
+                status = clean.get("status")
+
                 financial_status = clean.get("financials", {}).get("status")
 
                 clean = {
@@ -37,15 +40,12 @@ def get_records(summary: bool = True):
                         "dob": patient.get("dob") or "Unknown"
                     },
 
-                    # 🔥 Fix empty status
+                    # ✅ NOW THIS WORKS
                     "status": status or "NOT_PROCESSED",
 
-                    # 🔥 Fix null risk_score
                     "risk_score": risk if risk is not None else 0,
-
-                    # 🔥 Fix empty financial status
                     "financial_status": financial_status or "PENDING"
-                }
+            }
 
             clean_records.append(clean)
 

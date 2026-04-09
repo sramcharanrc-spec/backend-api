@@ -5,8 +5,8 @@ from app.agents.langgraph_node import create_node
 # -------------------------
 # Imports
 # -------------------------
-# from app.agents.super_agent import SuperAgent
 from app.agents.submission.submission_agent import SubmissionAgent
+from app.agents.acknowledgment.acknowledgment_agent import AcknowledgmentAgent
 from app.agents.payment.payment_agent import PaymentAgent
 from app.agents.analytics.analytics_agent import AnalyticsAgent
 from app.agents.denial.denial_agent import DenialAgent
@@ -29,6 +29,7 @@ builder = StateGraph(State)
 # supervisor = SuperAgent()
 
 submission = SubmissionAgent()
+acknowledgment = AcknowledgmentAgent()
 payment = PaymentAgent()
 analytics = AnalyticsAgent()
 denial = DenialAgent()
@@ -167,6 +168,13 @@ async def supervisor_node(state):
         state["next"] = "submission"
         return state
 
+    # 🔥 🔥 CRITICAL FIX: STOP AFTER SUBMISSION
+    if steps.get("submitted") and not steps.get("acknowledged"):
+        print("⏸ WAITING FOR CLEARINGHOUSE APPROVAL")
+        
+        state["next"] = "finish"
+        return state   # ⛔ STOP PIPELINE HERE
+
     # 5. Denial
     if not steps.get("denial_checked"):
         state["next"] = "denial"
@@ -192,6 +200,7 @@ builder.add_node("case_orchestrator", create_node(case_agent))
 builder.add_node("eligibility", create_node(eligibility))
 builder.add_node("rules_validation", create_node(validation_agent))
 builder.add_node("submission", create_node(submission))
+builder.add_node("acknowledgment", create_node(acknowledgment))
 builder.add_node("denial", create_node(denial))
 builder.add_node("payment", create_node(payment))
 builder.add_node("analytics", create_node(analytics))
@@ -221,6 +230,7 @@ builder.add_conditional_edges(
         "eligibility": "eligibility",
         "rules_validation": "rules_validation",
         "submission": "submission",
+        "acknowledgment": "acknowledgment",
         "denial": "denial",
         "payment": "payment",
         "analytics": "analytics",
@@ -238,6 +248,7 @@ for node in [
     "eligibility",
     "rules_validation",
     "submission",
+    "acknowledgment",
     "denial",
     "payment",
     "analytics",

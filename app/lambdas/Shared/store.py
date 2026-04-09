@@ -38,6 +38,7 @@ def init_db():
             transmission_id TEXT,
             raw_edi TEXT,
             ack_type TEXT,
+            status_history text,
             created_at TEXT NOT NULL,
             updated_at TEXT NOT NULL
         )
@@ -159,3 +160,19 @@ def get_all_submissions():
     conn.close()
 
     return [dict(row) for row in rows]
+
+def get_submission_by_claim_id(claim_id: str):
+    conn = get_conn()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT * FROM submissions
+        WHERE claim_id = ?
+        ORDER BY updated_at DESC
+        LIMIT 1
+    """, (claim_id,))
+
+    row = cur.fetchone()
+    conn.close()
+
+    return dict(row) if row else None

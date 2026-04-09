@@ -2,7 +2,13 @@ import time
 import asyncio
 from app.rcm.websocket.manager import manager
 from app.rcm.clearinghouse_client import send_to_clearinghouse
-
+from app.rcm.submission import (
+    record_ack,
+    record_denial,
+    record_success,
+    save_submission,
+    get_submission
+)
 from app.rcm.edi_responses import (
     generate_999_ack,
     generate_277ca,
@@ -56,6 +62,12 @@ def execute_pipeline(payload: dict) -> dict:
 
     ch_response = send_to_clearinghouse(edi_payload)
 
+# ✅ Save submission
+    record_success(payload, {
+        "transmission_id": ch_response.get("transmission_id"),
+        "edi": edi_payload
+    })
+
     safe_broadcast({
         "stage": "clearinghouse",
         "status": "completed",
@@ -67,6 +79,13 @@ def execute_pipeline(payload: dict) -> dict:
     # 🔥 4. 999 ACK
     ack_999 = generate_999_ack()
 
+    record_ack(
+    submission_id=submission_id,
+    status=ack_999["status"],
+    reason=ack_999["message"],
+    claim_id=payload.get("claim_id")
+    )
+
     safe_broadcast({
         "stage": "ack_999",
         "status": ack_999["status"],
@@ -77,6 +96,13 @@ def execute_pipeline(payload: dict) -> dict:
 
     # 🔥 5. 277CA
     ack_277 = generate_277ca(submission_id, True)
+
+    record_ack(
+    submission_id=submission_id,
+    status=ack_277["status"],
+    reason=ack_277.get("error"),
+    claim_id=payload.get("claim_id")
+    )
 
     safe_broadcast({
         "stage": "277ca",
@@ -117,6 +143,11 @@ def execute_pipeline(payload: dict) -> dict:
         submission_id,
         float(payload.get("total_charge", 0))
     )
+
+    record_success(payload, {
+    "transmission_id": submission_id,
+    "edi": str(era)
+    })
 
     safe_broadcast({
         "stage": "era_835",

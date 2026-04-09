@@ -1,0 +1,1866 @@
+[
+    {
+        "id": "45545250-c307-4158-a1cc-1c70abde62cc",
+        "claim_id": "CLM-575662af19",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-07T13:57:22.737180",
+        "details": {},
+        "prev_hash": "",
+        "hash": "be0d1f3cd3c6c83c6def0b8d50d43c1909557572608dce18c063d2fc31139f64"
+    },
+    {
+        "id": "479ed213-8363-4e1e-a07e-267810a1ac86",
+        "claim_id": "CLM-575662af19",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-07T13:57:22.763044",
+        "details": {
+            "status": "PAID"
+        },
+        "prev_hash": "be0d1f3cd3c6c83c6def0b8d50d43c1909557572608dce18c063d2fc31139f64",
+        "hash": "e4a8b5d427ac3237b1f4ada246142ecb1ca6a4843cc8f8c8f9daaf8f2b6459f9"
+    },
+    {
+        "id": "9beaf566-5d29-425e-9a76-eff8a17424fe",
+        "claim_id": "CLM-575662af19",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-07T13:57:22.773916",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "e4a8b5d427ac3237b1f4ada246142ecb1ca6a4843cc8f8c8f9daaf8f2b6459f9",
+        "hash": "ad1ad02f84e68b14a692f4253a3c5b5ea9b1ea3f535e9da6f8277aafe5f8499e"
+    },
+    {
+        "id": "915c14e4-d64c-4223-8c63-ca8b662ea407",
+        "claim_id": "CLM-575662af19",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-07T13:57:22.781149",
+        "details": {
+            "expected": 474.14,
+            "received": 474.14,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "ad1ad02f84e68b14a692f4253a3c5b5ea9b1ea3f535e9da6f8277aafe5f8499e",
+        "hash": "e212143d612d0e595984d882cbdb2485d987efc93fef691ea94fd0adec57a0c1"
+    },
+    {
+        "id": "43cebf65-29d3-4e1d-94e7-3fb66c2cc950",
+        "claim_id": "CLM-e589428e02",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-07T14:02:01.769215",
+        "details": {},
+        "prev_hash": "e212143d612d0e595984d882cbdb2485d987efc93fef691ea94fd0adec57a0c1",
+        "hash": "e20385927c2636b03aa189488be09506b36604b8464d3e79ccb856bb1c32bd6d"
+    },
+    {
+        "id": "e574a131-b4c5-4c24-b45b-34cd99221633",
+        "claim_id": "CLM-e589428e02",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:01.776890",
+        "details": {
+            "status": "DENIED",
+            "denial_code": "CO-50"
+        },
+        "prev_hash": "e20385927c2636b03aa189488be09506b36604b8464d3e79ccb856bb1c32bd6d",
+        "hash": "47de6a94943e33490fc2b630950d0e98e3b26f2ae271b72e37c84565d6072e62"
+    },
+    {
+        "id": "c1e07d82-b711-4d00-89e9-a819ae0e3160",
+        "claim_id": "CLM-e589428e02",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:01.783347",
+        "details": {
+            "risk_score": 0.95,
+            "reason": "Invalid CPT or missing modifiers",
+            "suggestion": "Auto-corrected modifier and rebilled"
+        },
+        "prev_hash": "47de6a94943e33490fc2b630950d0e98e3b26f2ae271b72e37c84565d6072e62",
+        "hash": "3bd16bc2845d69a0155a9ccda0e180c6095d3ebbb77c887c47216464c6f22f9b"
+    },
+    {
+        "id": "5195db12-8652-4d3d-a88d-fb6708178762",
+        "claim_id": "CLM-e589428e02",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:01.790748",
+        "details": {
+            "expected": 474.14,
+            "received": 450.433,
+            "adjustment": 23.706999999999994,
+            "status": "underpaid"
+        },
+        "prev_hash": "3bd16bc2845d69a0155a9ccda0e180c6095d3ebbb77c887c47216464c6f22f9b",
+        "hash": "682bf152439d3abdfaac2ee0294c96f9ba2c8805edc927fb81e7b69411eefccb"
+    },
+    {
+        "id": "931f7097-c9f9-46b4-bd80-60dc958163b3",
+        "claim_id": "CLM-e589428e02",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-07T14:02:16.158220",
+        "details": {},
+        "prev_hash": "682bf152439d3abdfaac2ee0294c96f9ba2c8805edc927fb81e7b69411eefccb",
+        "hash": "3946acbd39cbb087547afeb07a9d174d2966c37c41584c88370d74bc5ef93ef8"
+    },
+    {
+        "id": "a2af6d28-7b42-44c0-9205-ba5e8efd5a24",
+        "claim_id": "CLM-e589428e02",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:16.169359",
+        "details": {
+            "status": "ACK_RECEIVED"
+        },
+        "prev_hash": "3946acbd39cbb087547afeb07a9d174d2966c37c41584c88370d74bc5ef93ef8",
+        "hash": "5d7ceef45316764bb28945f8db837d3559473dd162765c07d8598f3ed05fd2af"
+    },
+    {
+        "id": "26c0f559-5da2-4aff-af80-809ad8d69f92",
+        "claim_id": "CLM-e589428e02",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:16.175441",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "5d7ceef45316764bb28945f8db837d3559473dd162765c07d8598f3ed05fd2af",
+        "hash": "19067579c515c4a280219328dfa52f670f60a73fa86efe041fa5813cc17e898a"
+    },
+    {
+        "id": "1d7713ef-dd60-40db-9ec1-f40e59fe822c",
+        "claim_id": "CLM-e589428e02",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-07T14:02:16.181744",
+        "details": {
+            "expected": 474.14,
+            "received": 450.433,
+            "adjustment": 23.706999999999994,
+            "status": "underpaid"
+        },
+        "prev_hash": "19067579c515c4a280219328dfa52f670f60a73fa86efe041fa5813cc17e898a",
+        "hash": "3101b5b6656c5619220e4357f32e5934a99893423682e4a72a6609589f4263e8"
+    },
+    {
+        "id": "cbbcfa0b-90f8-4e68-8129-850aa5ebbbbe",
+        "claim_id": "CLM-1d84153f36",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T07:59:43.510582",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "3101b5b6656c5619220e4357f32e5934a99893423682e4a72a6609589f4263e8",
+        "hash": "3be8a7905d53dd5e805f34462b7412b24e367af42ebc898ab558314ee20fe6d6"
+    },
+    {
+        "id": "31426226-708f-4867-9f04-f887f91d326e",
+        "claim_id": "CLM-1d84153f36",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T07:59:43.521526",
+        "details": {},
+        "prev_hash": "3be8a7905d53dd5e805f34462b7412b24e367af42ebc898ab558314ee20fe6d6",
+        "hash": "be92efe0faecc75c172367dce7d441e28564af0489907f71a4d37e5b3f478c34"
+    },
+    {
+        "id": "6b9ed48e-034e-45ee-8a25-14b1d2802dfa",
+        "claim_id": "CLM-6a03790fc0",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T09:25:35.725215",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "be92efe0faecc75c172367dce7d441e28564af0489907f71a4d37e5b3f478c34",
+        "hash": "2a9e7204e2d65cc454fa81bb695cad616236f270d9632addcfa93db3461818e7"
+    },
+    {
+        "id": "22f7179c-8c43-4bc8-ac06-8ff62742e198",
+        "claim_id": "CLM-6a03790fc0",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T09:25:35.739469",
+        "details": {},
+        "prev_hash": "2a9e7204e2d65cc454fa81bb695cad616236f270d9632addcfa93db3461818e7",
+        "hash": "6b6bfbd1b5275156698c793553e659f4920fe994b6aa33a3c16b9254cdede63c"
+    },
+    {
+        "id": "de854448-46b3-40be-b97c-cf1260cd938e",
+        "claim_id": "CLM-d722e58c87",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T10:45:23.895200",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "6b6bfbd1b5275156698c793553e659f4920fe994b6aa33a3c16b9254cdede63c",
+        "hash": "135933eada13ced55382b9d23404de1c1ba9b6b6682176a82d50209a77bebad9"
+    },
+    {
+        "id": "43f0690a-ea40-4f7b-8520-ebc0efa1ea68",
+        "claim_id": "CLM-d722e58c87",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T10:45:23.908512",
+        "details": {},
+        "prev_hash": "135933eada13ced55382b9d23404de1c1ba9b6b6682176a82d50209a77bebad9",
+        "hash": "0f8b74b93ee4635d98bbf3c9edd6d0e1fc56f60868a511781679de427a9f278c"
+    },
+    {
+        "id": "ed034fe1-1c45-4a46-a399-d19065aa2a3f",
+        "claim_id": "CLM-d722e58c87",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T10:45:25.584273",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "REJECTED",
+                "error": "Missing required field"
+            },
+            "raw": {
+                "status": "DENIED",
+                "denial_code": "CO-50"
+            }
+        },
+        "prev_hash": "0f8b74b93ee4635d98bbf3c9edd6d0e1fc56f60868a511781679de427a9f278c",
+        "hash": "26a7a223e9bd53b54bf3b79d6b6ddbfa0e261b76e771639b3175f198cb674b77"
+    },
+    {
+        "id": "88bcad1f-b6cd-4756-9c9a-e979776b8816",
+        "claim_id": "CLM-d722e58c87",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T10:45:25.602236",
+        "details": {
+            "risk_score": 0.95,
+            "reason": "Invalid CPT or missing modifiers",
+            "suggestion": "Auto-corrected modifier and rebilled"
+        },
+        "prev_hash": "26a7a223e9bd53b54bf3b79d6b6ddbfa0e261b76e771639b3175f198cb674b77",
+        "hash": "93f7f2ae0ad2a2296e22deb191158a0e52b06ba0184d63b71d789485ac98f7f8"
+    },
+    {
+        "id": "1b873fe8-ff61-4c50-a723-9667c10238fc",
+        "claim_id": "CLM-2b0dcb4d58",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T11:45:27.125378",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "93f7f2ae0ad2a2296e22deb191158a0e52b06ba0184d63b71d789485ac98f7f8",
+        "hash": "9f8958a3675dcffe389154ad74a9ef64fe2fa5ad6febf04809cca98c8c3bfdfc"
+    },
+    {
+        "id": "f0ebad1d-c40e-40db-893c-1f41b204715c",
+        "claim_id": "CLM-2b0dcb4d58",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T11:45:27.136623",
+        "details": {},
+        "prev_hash": "9f8958a3675dcffe389154ad74a9ef64fe2fa5ad6febf04809cca98c8c3bfdfc",
+        "hash": "da51db3f7ebcc1671d9c2848c6b2fefda1095a6076a6c15ad984b139cb0c88b0"
+    },
+    {
+        "id": "ba50af1e-3870-480c-9a6e-3409e0be2505",
+        "claim_id": "CLM-2b0dcb4d58",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T11:45:28.838599",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-2630f965"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "da51db3f7ebcc1671d9c2848c6b2fefda1095a6076a6c15ad984b139cb0c88b0",
+        "hash": "87f3dbd63b0bd479af28c33edfa77b0832eb934029e0e4046053252229e2e333"
+    },
+    {
+        "id": "8729021f-7171-4039-873c-5f573917c56b",
+        "claim_id": "CLM-2b0dcb4d58",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T11:45:28.862475",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "87f3dbd63b0bd479af28c33edfa77b0832eb934029e0e4046053252229e2e333",
+        "hash": "91454916b966411abdf9d3ac4a917c8ea6f61a09af8d7051052f97f23a73ad0c"
+    },
+    {
+        "id": "0fe8d709-5401-4f0e-bf70-7436c8536b86",
+        "claim_id": "CLM-2b0dcb4d58",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T11:45:29.193124",
+        "details": {
+            "expected": 400.0,
+            "received": 380.0,
+            "adjustment": 20.0,
+            "status": "underpaid"
+        },
+        "prev_hash": "91454916b966411abdf9d3ac4a917c8ea6f61a09af8d7051052f97f23a73ad0c",
+        "hash": "c0c50d515ff38f7efe11227022dacda25628337c59003890fd3223598a140c9e"
+    },
+    {
+        "id": "50f222ce-0248-4aed-861a-f1de2aadea47",
+        "claim_id": "CLM-1842b57232",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T11:53:10.806603",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "c0c50d515ff38f7efe11227022dacda25628337c59003890fd3223598a140c9e",
+        "hash": "024301722496b0fc4604c54ac48d73da0bae5730d500f192034673ebd5c5f2c7"
+    },
+    {
+        "id": "5637f38e-cae8-4ce6-9322-8964fe8fa264",
+        "claim_id": "CLM-1842b57232",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-08T11:53:11.095825",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "024301722496b0fc4604c54ac48d73da0bae5730d500f192034673ebd5c5f2c7",
+        "hash": "9d0dfed0bc61e7c83c84e45d1982c369f1d65ea8721ce9a9023b8499ea83f8a4"
+    },
+    {
+        "id": "a0d26dd3-1538-4368-b1b3-e2582a0263c1",
+        "claim_id": "CLM-1842b57232",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-08T12:13:44.746267",
+        "details": {
+            "dob": "1990-01-01",
+            "npi": "1234567890"
+        },
+        "prev_hash": "9d0dfed0bc61e7c83c84e45d1982c369f1d65ea8721ce9a9023b8499ea83f8a4",
+        "hash": "8858a744f2ccb3b9e5ff66e38055430f378c2cf6861157eee88e5fba51ec01a5"
+    },
+    {
+        "id": "fd77d92f-546f-4a23-8532-ef7e12a7b1b7",
+        "claim_id": "CLM-1842b57232",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T12:13:44.796723",
+        "details": {},
+        "prev_hash": "8858a744f2ccb3b9e5ff66e38055430f378c2cf6861157eee88e5fba51ec01a5",
+        "hash": "9598fe390065acc566dab40bd737e62c12075d515e20ee27d74949fe4e4d7ae7"
+    },
+    {
+        "id": "8f03a5cd-287e-4314-9290-2f2c0b865e40",
+        "claim_id": "CLM-1842b57232",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:13:46.474876",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-cdbd2299"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "9598fe390065acc566dab40bd737e62c12075d515e20ee27d74949fe4e4d7ae7",
+        "hash": "8d141e51095cd295865783a2e8273a82dc5fb3c03617ed554fdd725fd1470eee"
+    },
+    {
+        "id": "ea26ae34-6d4d-4efe-9ba4-7ef7f765de13",
+        "claim_id": "CLM-1842b57232",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:13:46.486459",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "8d141e51095cd295865783a2e8273a82dc5fb3c03617ed554fdd725fd1470eee",
+        "hash": "898c0a5ae71dafbdf3f420052d5017ceb51a4f1c9c913d88b779e55141a7f917"
+    },
+    {
+        "id": "9a50ad70-b350-4782-8bc5-37f7986a7f24",
+        "claim_id": "CLM-1842b57232",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:13:46.902046",
+        "details": {
+            "expected": 150.0,
+            "received": 142.5,
+            "adjustment": 7.5,
+            "status": "underpaid"
+        },
+        "prev_hash": "898c0a5ae71dafbdf3f420052d5017ceb51a4f1c9c913d88b779e55141a7f917",
+        "hash": "ccd33d1a5ef4df14137aa31be26a69182065a9b83c95d03bae3579584d70a231"
+    },
+    {
+        "id": "e52f465c-9774-4174-86f9-f2889b56f7b1",
+        "claim_id": "CLM-26b0a9fb21",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:54:45.852525",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "ccd33d1a5ef4df14137aa31be26a69182065a9b83c95d03bae3579584d70a231",
+        "hash": "68bf79a9de498dad1ebf7536e3d8b3ae6ac301047a21123cd35fbe536cd18b70"
+    },
+    {
+        "id": "a655ac99-4187-48f4-a9ec-4f6f1fc0e2e5",
+        "claim_id": "CLM-26b0a9fb21",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T12:54:45.869458",
+        "details": {},
+        "prev_hash": "68bf79a9de498dad1ebf7536e3d8b3ae6ac301047a21123cd35fbe536cd18b70",
+        "hash": "508b002020ead6e8463bd752960e881a797b47596cb2ec2d111d54ebb3bb5c7f"
+    },
+    {
+        "id": "0f7e3646-f4c0-49cf-ad93-9e75a0e74070",
+        "claim_id": "CLM-26b0a9fb21",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:54:47.582240",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "REJECTED",
+                "error": "Missing required field"
+            },
+            "raw": {
+                "status": "DENIED",
+                "denial_code": "CO-50"
+            }
+        },
+        "prev_hash": "508b002020ead6e8463bd752960e881a797b47596cb2ec2d111d54ebb3bb5c7f",
+        "hash": "1926daa037c7b743823282d2456d8a615249c727d39576a7778c5fd2e280cd7f"
+    },
+    {
+        "id": "e1a9c93b-9b3f-4660-b0a8-6a854721f9fc",
+        "claim_id": "CLM-26b0a9fb21",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T12:54:47.646420",
+        "details": {
+            "risk_score": 0.95,
+            "reason": "Invalid CPT or missing modifiers",
+            "suggestion": "Auto-corrected modifier and rebilled"
+        },
+        "prev_hash": "1926daa037c7b743823282d2456d8a615249c727d39576a7778c5fd2e280cd7f",
+        "hash": "1f18f5559aaa883964138ddf5c920d5fef20b33f633442e4eca9e6d5953ddb53"
+    },
+    {
+        "id": "5a0755ff-fef4-45ce-a5b3-cb4262d11252",
+        "claim_id": "CLM-6d673f9d8b",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:15:55.771221",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "1f18f5559aaa883964138ddf5c920d5fef20b33f633442e4eca9e6d5953ddb53",
+        "hash": "222d99df4e9b499832260200b70c7bbcf3bf2394e9e662209ca7f0445e90e79e"
+    },
+    {
+        "id": "e162b2da-0c52-4dbf-9700-54d4fbf739a1",
+        "claim_id": "CLM-6d673f9d8b",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T13:15:55.783059",
+        "details": {},
+        "prev_hash": "222d99df4e9b499832260200b70c7bbcf3bf2394e9e662209ca7f0445e90e79e",
+        "hash": "a450d58fa73e28593062648f1db590b455797b7db2b033de04c445d990379e1e"
+    },
+    {
+        "id": "9afa3e7d-8168-41cd-be77-775bdce54d36",
+        "claim_id": "CLM-6d673f9d8b",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:15:59.109896",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-1f389864"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "a450d58fa73e28593062648f1db590b455797b7db2b033de04c445d990379e1e",
+        "hash": "2d2568029ccab0c2b65e60ade95a5d4c1589fe1dbefe5dca4b6e0f27ab6b2335"
+    },
+    {
+        "id": "3fc27caa-aa6b-4b8a-b0f1-9b67cd910e14",
+        "claim_id": "CLM-6d673f9d8b",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:15:59.248620",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "2d2568029ccab0c2b65e60ade95a5d4c1589fe1dbefe5dca4b6e0f27ab6b2335",
+        "hash": "2579e9df7ed63420a6e992697401d8372ac8c6df3b57ed6a32f761fe6caa4a9e"
+    },
+    {
+        "id": "085602fb-b531-4d20-9d18-785508d59377",
+        "claim_id": "CLM-6d673f9d8b",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:15:59.590112",
+        "details": {
+            "expected": 474.14,
+            "received": 474.14,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "2579e9df7ed63420a6e992697401d8372ac8c6df3b57ed6a32f761fe6caa4a9e",
+        "hash": "f32794ce0b3a081d22e13cfa1449c87bbd10267d69e36cd475ddc84eaf0fc9ed"
+    },
+    {
+        "id": "dea7429f-ce4c-48f4-9bc9-7873f1f7b2e9",
+        "claim_id": "CLM-4ff4959d75",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:22:38.516161",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "f32794ce0b3a081d22e13cfa1449c87bbd10267d69e36cd475ddc84eaf0fc9ed",
+        "hash": "c18bc4d49c4c97434ce6048ed8895cafdc84da7ce74a83f3f9f5fa8f0150d8f1"
+    },
+    {
+        "id": "c3482b16-97d4-43fb-af8a-3796d47517e0",
+        "claim_id": "CLM-4ff4959d75",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T13:22:38.530224",
+        "details": {},
+        "prev_hash": "c18bc4d49c4c97434ce6048ed8895cafdc84da7ce74a83f3f9f5fa8f0150d8f1",
+        "hash": "69c0e6cb36d1982e2c365362fc5ca01c47328d8c1ae59677688c89d91d751554"
+    },
+    {
+        "id": "90d8d51f-a13c-4fc1-a3f9-d7d74f3f4240",
+        "claim_id": "CLM-4ff4959d75",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:22:40.269897",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-b5a744bd"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "69c0e6cb36d1982e2c365362fc5ca01c47328d8c1ae59677688c89d91d751554",
+        "hash": "c2019f5e1d7156350a967f65fa78013a611c4152af64749d68c42153d9934025"
+    },
+    {
+        "id": "c312f4c1-0723-40d6-b62e-795fa2add606",
+        "claim_id": "CLM-4ff4959d75",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:22:40.467842",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "c2019f5e1d7156350a967f65fa78013a611c4152af64749d68c42153d9934025",
+        "hash": "fe1a3984ee6f8c8bfcbf3deea13f002a4a202dc7fd76eed5914668a25e0054e5"
+    },
+    {
+        "id": "0a583000-eb4e-4028-8c39-1e85a5416d67",
+        "claim_id": "CLM-4ff4959d75",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T13:22:40.815636",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "fe1a3984ee6f8c8bfcbf3deea13f002a4a202dc7fd76eed5914668a25e0054e5",
+        "hash": "a0d10fa48e1aa0c53970fd224f5effdcca4beeef431df16ceeaf20a4fc050d3b"
+    },
+    {
+        "id": "e925f30f-1c38-4683-8c9d-a1953968617d",
+        "claim_id": "CLM-d333771c95",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T14:12:05.587213",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "a0d10fa48e1aa0c53970fd224f5effdcca4beeef431df16ceeaf20a4fc050d3b",
+        "hash": "b2f72426f4296a1294bc4272a879ffb4cf2c76f8b0c80359f1269a8ef86a4f65"
+    },
+    {
+        "id": "c03c126a-8d4b-444b-864d-d6568fc04b7b",
+        "claim_id": "CLM-d333771c95",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T14:12:05.621352",
+        "details": {},
+        "prev_hash": "b2f72426f4296a1294bc4272a879ffb4cf2c76f8b0c80359f1269a8ef86a4f65",
+        "hash": "15afbea60d5ecd92c310715a72e4732f0d6a8e10a929f23b612ed9372270a8ec"
+    },
+    {
+        "id": "94eeba50-1cc5-41ad-9e9c-867a736d4552",
+        "claim_id": "CLM-d333771c95",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T14:12:07.345155",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-3401121a"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "15afbea60d5ecd92c310715a72e4732f0d6a8e10a929f23b612ed9372270a8ec",
+        "hash": "0d945da28ab64778ae8a580d80cd87efacdbf73a34732b00e270d587bf7ae9fa"
+    },
+    {
+        "id": "83fdbcd6-4046-4efa-9b90-a665f4d72c31",
+        "claim_id": "CLM-d333771c95",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T14:12:07.384163",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "0d945da28ab64778ae8a580d80cd87efacdbf73a34732b00e270d587bf7ae9fa",
+        "hash": "e1ad4a69536ea6b9cd00695423cb49e32b6425618b119034d61940e051777339"
+    },
+    {
+        "id": "aac62aef-b8eb-47e0-9366-4e198c29e14c",
+        "claim_id": "CLM-d333771c95",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T14:12:07.710818",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "e1ad4a69536ea6b9cd00695423cb49e32b6425618b119034d61940e051777339",
+        "hash": "af53692186302036ac427f817455781ef690ba97c832ff2a76b859cdcc726713"
+    },
+    {
+        "id": "32f0a680-9ec2-4026-b7c7-a62e55e4efad",
+        "claim_id": "CLM-3168fd7e2d",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:35:55.574445",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "af53692186302036ac427f817455781ef690ba97c832ff2a76b859cdcc726713",
+        "hash": "49ce8dd75959c5a97be9f9d5168b1b676f3a58729d7e2dae2ad2740d551fb10d"
+    },
+    {
+        "id": "746d98b0-cf8a-4c2b-b9c3-0b04cd101580",
+        "claim_id": "CLM-3168fd7e2d",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T18:35:55.597638",
+        "details": {},
+        "prev_hash": "49ce8dd75959c5a97be9f9d5168b1b676f3a58729d7e2dae2ad2740d551fb10d",
+        "hash": "8325be240a8a98b1a56b1e5bc2656b3200c0bb0e4e39c724544667f022f08924"
+    },
+    {
+        "id": "c7fb35fb-32a9-49b1-a19d-a4de1c146012",
+        "claim_id": "CLM-3168fd7e2d",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:35:57.385342",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "REJECTED",
+                "error": "Missing required field"
+            },
+            "raw": {
+                "status": "DENIED",
+                "denial_code": "CO-50"
+            }
+        },
+        "prev_hash": "8325be240a8a98b1a56b1e5bc2656b3200c0bb0e4e39c724544667f022f08924",
+        "hash": "974c1031bbaa0633a39fdcb75ba8696a76c746f4b6a60d40d981b5e3f783403e"
+    },
+    {
+        "id": "f3523f83-8c82-4ccc-ad2a-e11dad36bbd3",
+        "claim_id": "CLM-3168fd7e2d",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:35:57.399586",
+        "details": {
+            "risk_score": 0.95,
+            "reason": "Invalid CPT or missing modifiers",
+            "suggestion": "Auto-corrected modifier and rebilled"
+        },
+        "prev_hash": "974c1031bbaa0633a39fdcb75ba8696a76c746f4b6a60d40d981b5e3f783403e",
+        "hash": "d96eb0bff698264356bc160e2da1276af7190559ba7e8c730ea34097df89e87b"
+    },
+    {
+        "id": "2ddec0c3-3931-443b-82b6-dfe25e9098d1",
+        "claim_id": "CLM-3168fd7e2d",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:35:57.441402",
+        "details": {
+            "expected": 400.0,
+            "received": 0,
+            "adjustment": 400.0,
+            "status": "denied"
+        },
+        "prev_hash": "d96eb0bff698264356bc160e2da1276af7190559ba7e8c730ea34097df89e87b",
+        "hash": "3ba3f843378ecddb4be23036f21e90a47ffd6a207cc9c1ce609a98587f32a567"
+    },
+    {
+        "id": "64c28096-1853-455d-9ca8-20b5d8ce0132",
+        "claim_id": "CLM-d1750a21c2",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:40:22.532109",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "3ba3f843378ecddb4be23036f21e90a47ffd6a207cc9c1ce609a98587f32a567",
+        "hash": "2cd7d98a9e64a01c8bfede3dbfcc1d642c240155f87adac5865125031b031319"
+    },
+    {
+        "id": "81debfce-0b96-4b6d-8fa0-9707b53d8275",
+        "claim_id": "CLM-d1750a21c2",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T18:40:22.716344",
+        "details": {},
+        "prev_hash": "2cd7d98a9e64a01c8bfede3dbfcc1d642c240155f87adac5865125031b031319",
+        "hash": "31b74b68557c9062cc57ff1543c67ce2ea827b038f49103a30daa8c23740b5b6"
+    },
+    {
+        "id": "df0b5e2b-c35b-4fbc-8006-691009082ae4",
+        "claim_id": "CLM-d1750a21c2",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:40:24.470117",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-94a709b2"
+            },
+            "raw": {
+                "status": "PAID"
+            }
+        },
+        "prev_hash": "31b74b68557c9062cc57ff1543c67ce2ea827b038f49103a30daa8c23740b5b6",
+        "hash": "2b531434312143a8358181173cbb722ab2c2c9c9f8685a980b70c8308fd7e0e0"
+    },
+    {
+        "id": "775e5fc4-e6b3-4cf7-805b-2c7649bff088",
+        "claim_id": "CLM-d1750a21c2",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:40:24.494012",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "2b531434312143a8358181173cbb722ab2c2c9c9f8685a980b70c8308fd7e0e0",
+        "hash": "b1739a46b11ad8badc7f0ad3a4ccf96046bac9be91c3f09ef43bcc2a99f8a597"
+    },
+    {
+        "id": "6a3ac39d-1ab9-4a58-9bef-1f91b998b5c1",
+        "claim_id": "CLM-d1750a21c2",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-08T18:40:24.750980",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "b1739a46b11ad8badc7f0ad3a4ccf96046bac9be91c3f09ef43bcc2a99f8a597",
+        "hash": "f276632ff27ff4a6cd0caa55b8caab4bf19f915e3892b55f985212388172370c"
+    },
+    {
+        "id": "09f17b1c-87d5-4bc0-af85-3191b729e6cb",
+        "claim_id": "CLM-e68dbf485b",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-08T19:10:33.197008",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "f276632ff27ff4a6cd0caa55b8caab4bf19f915e3892b55f985212388172370c",
+        "hash": "e8efe33f96dc175d6f94944f9034ab65944db6cbead580d06d460ed45dcfadea"
+    },
+    {
+        "id": "ec7ceec6-4136-4dee-8ff4-6f12dbdf7f73",
+        "claim_id": "CLM-e68dbf485b",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-08T19:10:33.204796",
+        "details": {},
+        "prev_hash": "e8efe33f96dc175d6f94944f9034ab65944db6cbead580d06d460ed45dcfadea",
+        "hash": "e1026e1f45522b9547fd2f031ddebc42d6119234d7abfd15b08756e3db99322b"
+    },
+    {
+        "id": "4e0b5f9a-c0aa-44de-b165-6f626139b373",
+        "claim_id": "CLM-189a8156f1",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T05:04:31.671047",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "e1026e1f45522b9547fd2f031ddebc42d6119234d7abfd15b08756e3db99322b",
+        "hash": "cf6e63739b36e6f10aff470fbcd7610fad525afe77b7b582e180b8a0faaa3afd"
+    },
+    {
+        "id": "a54c9e85-d85a-41cb-b9c6-fe5c39834d33",
+        "claim_id": "CLM-189a8156f1",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T05:04:31.684211",
+        "details": {},
+        "prev_hash": "cf6e63739b36e6f10aff470fbcd7610fad525afe77b7b582e180b8a0faaa3afd",
+        "hash": "b3880d4ac7d328c7806855dbfaf0b360c36f276ae8482ce95b8cb224becf9679"
+    },
+    {
+        "id": "f886dc27-364d-4b9f-8a04-b45baa141747",
+        "claim_id": "CLM-a5d60f8acb",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T06:31:58.790727",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "b3880d4ac7d328c7806855dbfaf0b360c36f276ae8482ce95b8cb224becf9679",
+        "hash": "81f41cb900b97df458f2262f1e8bc4c81f9b53879f9fdc0bcf5d851080017840"
+    },
+    {
+        "id": "dc1e88fe-6898-4df4-b564-b5e1d77178cf",
+        "claim_id": "CLM-a5d60f8acb",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T06:31:58.800859",
+        "details": {},
+        "prev_hash": "81f41cb900b97df458f2262f1e8bc4c81f9b53879f9fdc0bcf5d851080017840",
+        "hash": "6225be67a4582a75c651ca0e9ba2e5990683f3ac7b016971e9bdd00a41ac0f7f"
+    },
+    {
+        "id": "88919f21-e8b6-4980-87fb-df3e3ee6ba00",
+        "claim_id": "CLM-a3f530d17b",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T06:57:14.793099",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "6225be67a4582a75c651ca0e9ba2e5990683f3ac7b016971e9bdd00a41ac0f7f",
+        "hash": "38b1e9ee5f0451406d230f2d690920bc05a4ea0a31ba31682a22880cce77b43e"
+    },
+    {
+        "id": "5ab939c2-d39d-4fc5-875e-130e5e613a5f",
+        "claim_id": "CLM-a3f530d17b",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T06:57:14.812916",
+        "details": {},
+        "prev_hash": "38b1e9ee5f0451406d230f2d690920bc05a4ea0a31ba31682a22880cce77b43e",
+        "hash": "a3ce1f5c23c95d7f1cdec9b6880eb0411bcb8a3f4ae7ee65bb3174e2791f1bd2"
+    },
+    {
+        "id": "8163b21a-3376-470c-8666-238c8bfa2ab5",
+        "claim_id": "CLM-e688375fa7",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T07:12:21.103760",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "a3ce1f5c23c95d7f1cdec9b6880eb0411bcb8a3f4ae7ee65bb3174e2791f1bd2",
+        "hash": "d368eba936028020694e6e9ad79f10ea50efa88a37f014cc1533cda4adca4c88"
+    },
+    {
+        "id": "1c2a4ed3-f1e9-456e-ac16-f0488af702ce",
+        "claim_id": "CLM-e688375fa7",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T07:12:21.125270",
+        "details": {},
+        "prev_hash": "d368eba936028020694e6e9ad79f10ea50efa88a37f014cc1533cda4adca4c88",
+        "hash": "9274278b4d20c8d83d9870e2d57b2685843ffc7ab3ae0d3be68f871f6b7aa6f1"
+    },
+    {
+        "id": "140b8f83-3901-4818-b33d-2266a3bfce44",
+        "claim_id": "CLM-1fd5824683",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T07:23:08.689860",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "9274278b4d20c8d83d9870e2d57b2685843ffc7ab3ae0d3be68f871f6b7aa6f1",
+        "hash": "be3ce682c54b648cdd80b5b109031afa16228f39828fd5b10a660e40c29a365b"
+    },
+    {
+        "id": "7632dd79-3ad7-48f2-ac71-6287af2fb488",
+        "claim_id": "CLM-1fd5824683",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T07:23:08.704420",
+        "details": {},
+        "prev_hash": "be3ce682c54b648cdd80b5b109031afa16228f39828fd5b10a660e40c29a365b",
+        "hash": "9aae4201c6d51f8f1071de13506f8195792e084a897aa041ae582d838a35a223"
+    },
+    {
+        "id": "a8988d12-3d1c-4c27-8da9-d4d72c64d364",
+        "claim_id": "CLM-e688375fa7",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:53:07.460728",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-2ae36456"
+            },
+            "raw": {
+                "status": "PAID"
+            }
+        },
+        "prev_hash": "9aae4201c6d51f8f1071de13506f8195792e084a897aa041ae582d838a35a223",
+        "hash": "5f0a1fa684a1b27704911ad3c080cc6ddf87f7e8f071c7310bfc1e2bc8c3109e"
+    },
+    {
+        "id": "9cf35b06-f98d-4130-a53a-c3e900f593c4",
+        "claim_id": "CLM-e688375fa7",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:53:07.482712",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "5f0a1fa684a1b27704911ad3c080cc6ddf87f7e8f071c7310bfc1e2bc8c3109e",
+        "hash": "674df0e62b4d661ea7de0b8204e6dc5bd8d195347d20807ab06b90b6f27bf647"
+    },
+    {
+        "id": "9708e144-0823-468a-8ab8-c3dcda38da53",
+        "claim_id": "CLM-e688375fa7",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:53:07.802801",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "674df0e62b4d661ea7de0b8204e6dc5bd8d195347d20807ab06b90b6f27bf647",
+        "hash": "7a76a0516387ae5771fb43fa84ed13b3a78d2340da29f860f43d73b7093bce42"
+    },
+    {
+        "id": "b030dc73-2c72-43d5-a39a-24e5d18738ee",
+        "claim_id": "CLM-e688375fa7",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:55:27.564649",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-2ae36456"
+            },
+            "raw": {
+                "status": "PAID"
+            }
+        },
+        "prev_hash": "7a76a0516387ae5771fb43fa84ed13b3a78d2340da29f860f43d73b7093bce42",
+        "hash": "d1605a20b4d7d9a19502c467a6657aa06c22f93cbc4ddb9ae0dd7a44d2af1eaf"
+    },
+    {
+        "id": "e9917ed6-c038-467e-81e6-1c4f37a4a423",
+        "claim_id": "CLM-e688375fa7",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:55:27.587129",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "d1605a20b4d7d9a19502c467a6657aa06c22f93cbc4ddb9ae0dd7a44d2af1eaf",
+        "hash": "6146c413d6e83a386e22227bab11e60d1c77bc66abf8ba4372bec604fe547715"
+    },
+    {
+        "id": "ec6f1bfd-728f-4a82-859a-b53ddd8291ef",
+        "claim_id": "CLM-e688375fa7",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T08:55:27.909068",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "6146c413d6e83a386e22227bab11e60d1c77bc66abf8ba4372bec604fe547715",
+        "hash": "a771e35dd3d708c9203d2fdb2aef5d72ce780852aaf5551474b4b9024c75c4d4"
+    },
+    {
+        "id": "6c18e484-0cf0-4727-bdba-8a6b6abc633c",
+        "claim_id": "CLM-c9bd3d344e",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:32:49.590975",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "a771e35dd3d708c9203d2fdb2aef5d72ce780852aaf5551474b4b9024c75c4d4",
+        "hash": "d2e4440c481454288def606ea71ec5a0c444dc6b085c4ea90ef07d4f24f3d364"
+    },
+    {
+        "id": "47eba2e3-f02d-423d-a6f4-f23080a49a11",
+        "claim_id": "CLM-c9bd3d344e",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T09:32:49.608074",
+        "details": {},
+        "prev_hash": "d2e4440c481454288def606ea71ec5a0c444dc6b085c4ea90ef07d4f24f3d364",
+        "hash": "a70fcee4deb392a45035118c6d1bf075cb869ffd11868ef11f3d03a4dd343533"
+    },
+    {
+        "id": "b94e1322-ad84-4c9a-8658-03810fa012ee",
+        "claim_id": "CLM-1fd5824683",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:43:41.985144",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-79473d57"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "a70fcee4deb392a45035118c6d1bf075cb869ffd11868ef11f3d03a4dd343533",
+        "hash": "febacb0dbca3db06ad94ed1e30ff1e6148b1c1f01963568034abb886c6cd35b3"
+    },
+    {
+        "id": "973b56b6-6fff-4df5-9276-50f93e85f5e5",
+        "claim_id": "CLM-1fd5824683",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:43:41.994058",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "febacb0dbca3db06ad94ed1e30ff1e6148b1c1f01963568034abb886c6cd35b3",
+        "hash": "068a5b8113c381f3d916792fe3018335cdb7de23c41002260190410dff0a3a17"
+    },
+    {
+        "id": "0ad70698-52ce-4e71-886a-67f480594e77",
+        "claim_id": "CLM-1fd5824683",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:43:42.303956",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "068a5b8113c381f3d916792fe3018335cdb7de23c41002260190410dff0a3a17",
+        "hash": "9b1c0b920db0d76aeffbb1b88c2506b555d4828ddc42448751ef7dabe1db028b"
+    },
+    {
+        "id": "0723d8b1-2af4-4d8c-ba4c-10709c3231b0",
+        "claim_id": "CLM-c9bd3d344e",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:44:06.496459",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "REJECTED",
+                "error": "Missing required field"
+            },
+            "raw": {
+                "status": "DENIED",
+                "denial_code": "CO-50"
+            }
+        },
+        "prev_hash": "9b1c0b920db0d76aeffbb1b88c2506b555d4828ddc42448751ef7dabe1db028b",
+        "hash": "7ed37c373a7898f6b6565d0af769723d9ff74691ae9a7c91266ad8136b6e085c"
+    },
+    {
+        "id": "084eaff7-ea6e-4080-8d93-8bf8ecccfb5d",
+        "claim_id": "CLM-c9bd3d344e",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:44:06.504185",
+        "details": {
+            "risk_score": 0.95,
+            "reason": "Invalid CPT or missing modifiers",
+            "suggestion": "Auto-corrected modifier and rebilled"
+        },
+        "prev_hash": "7ed37c373a7898f6b6565d0af769723d9ff74691ae9a7c91266ad8136b6e085c",
+        "hash": "5e9db7c62b263271cbfc79fbd2b634ecbc1c20a7b66f276f711ecc4b70b81c1e"
+    },
+    {
+        "id": "9bbf97c2-2dc5-4772-824e-00c53a27c04a",
+        "claim_id": "CLM-c9bd3d344e",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:44:06.540883",
+        "details": {
+            "expected": 400.0,
+            "received": 0,
+            "adjustment": 400.0,
+            "status": "denied"
+        },
+        "prev_hash": "5e9db7c62b263271cbfc79fbd2b634ecbc1c20a7b66f276f711ecc4b70b81c1e",
+        "hash": "25b5bf61745f36968f5e80f41d2d3ac1854901ecdf1aed69dee9b4f8e7dd47d2"
+    },
+    {
+        "id": "b8edefc2-bf20-40ab-ba4c-c85a9976b30f",
+        "claim_id": "CLM-c08b536df2",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T09:44:56.255205",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "25b5bf61745f36968f5e80f41d2d3ac1854901ecdf1aed69dee9b4f8e7dd47d2",
+        "hash": "5b45450010cc30c69c4f5bde309843989530816476f4af7918a56a6153369f1d"
+    },
+    {
+        "id": "2cbcbac8-8ccc-43d6-829f-afbfff2a2dbc",
+        "claim_id": "CLM-c08b536df2",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T09:44:56.262763",
+        "details": {},
+        "prev_hash": "5b45450010cc30c69c4f5bde309843989530816476f4af7918a56a6153369f1d",
+        "hash": "1dabee30af9524fc78af82dd46d8d75dd5565f60ca3a9f058cc7e4c3275df181"
+    },
+    {
+        "id": "2be01d7c-bad1-4631-9620-c9d73980860a",
+        "claim_id": "CLM-2df2a84cd7",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T10:27:03.400785",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "1dabee30af9524fc78af82dd46d8d75dd5565f60ca3a9f058cc7e4c3275df181",
+        "hash": "4b7240968750fb20657327da8800c4c8a0970075350cae76a802c98024d1ed07"
+    },
+    {
+        "id": "afa053bb-2abb-4cf2-8edf-cc14d615a974",
+        "claim_id": "CLM-2df2a84cd7",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T10:27:03.430597",
+        "details": {},
+        "prev_hash": "4b7240968750fb20657327da8800c4c8a0970075350cae76a802c98024d1ed07",
+        "hash": "ff846ccedbcf6804caf9150ad50253bbecd30e0a6855ab2fa75fb7242d9452ff"
+    },
+    {
+        "id": "b224e8d9-0db0-4b97-bdb3-479db91d5225",
+        "claim_id": "CLM-2df2a84cd7",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T10:28:31.808582",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-9fb9ec91"
+            },
+            "raw": {
+                "status": "PAID"
+            }
+        },
+        "prev_hash": "ff846ccedbcf6804caf9150ad50253bbecd30e0a6855ab2fa75fb7242d9452ff",
+        "hash": "5547a9d94f58ffc4cce5c976506a64ffa026302c1fbaa6e0968d68a7804891d0"
+    },
+    {
+        "id": "2b3ae7a5-302e-4d9c-9260-259655328b4c",
+        "claim_id": "CLM-2df2a84cd7",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T10:28:31.830917",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "5547a9d94f58ffc4cce5c976506a64ffa026302c1fbaa6e0968d68a7804891d0",
+        "hash": "c732a2139884f0f81c25fb53bd7aea979587d1328c42b338db1898f30f2fcb35"
+    },
+    {
+        "id": "653cbef9-2dbe-4cee-92b2-0d84d2688ec8",
+        "claim_id": "CLM-2df2a84cd7",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T10:28:32.154832",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "c732a2139884f0f81c25fb53bd7aea979587d1328c42b338db1898f30f2fcb35",
+        "hash": "a02fc2b71e4e9c183ea4b93e449595908221bd77c2c59fc4cfb0a33c3ec0bc97"
+    },
+    {
+        "id": "1950d42a-51bd-46c4-96e3-60c2558bfacf",
+        "claim_id": "CLM-85b42f8973",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T10:46:02.261877",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "a02fc2b71e4e9c183ea4b93e449595908221bd77c2c59fc4cfb0a33c3ec0bc97",
+        "hash": "81494c3fe1042a542382f9c71fbf5135ac8b85fece6880f44580628655dc839d"
+    },
+    {
+        "id": "83f6a7a4-a039-4593-9861-294fc5644c3c",
+        "claim_id": "CLM-85b42f8973",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T10:46:02.559883",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "81494c3fe1042a542382f9c71fbf5135ac8b85fece6880f44580628655dc839d",
+        "hash": "b5126719e5d051060841721d0f68a960a929669b6be65e93f5ea760e9e9a096b"
+    },
+    {
+        "id": "540adda1-95ae-4061-88ba-e7d5f2e6947b",
+        "claim_id": "CLM-85b42f8973",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T11:21:08.350663",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "SYSTEM",
+            "approved_at": "2026-04-09T11:21:07.726559"
+        },
+        "prev_hash": "b5126719e5d051060841721d0f68a960a929669b6be65e93f5ea760e9e9a096b",
+        "hash": "7e7f97607a6a77d1c3844cc1a8d0a7e0f3478dfdbf4f1aab79b96138280a7cdf"
+    },
+    {
+        "id": "aa91acb2-4a47-480c-abb0-43ddecbbd7e9",
+        "claim_id": "CLM-af5b673365",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T11:39:22.344335",
+        "details": {
+            "dob": "12-07-1996",
+            "npi": "123456789"
+        },
+        "prev_hash": "7e7f97607a6a77d1c3844cc1a8d0a7e0f3478dfdbf4f1aab79b96138280a7cdf",
+        "hash": "d53d5edef4340b823adf572cd616f0910493be44329203b06ec8bb7e6cae2674"
+    },
+    {
+        "id": "d7fa5b70-afe6-4eb4-a9ba-de82ea07b364",
+        "claim_id": "CLM-af5b673365",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T11:46:44.385467",
+        "details": {
+            "dob": "12-07-1996",
+            "npi": "123456789"
+        },
+        "prev_hash": "d53d5edef4340b823adf572cd616f0910493be44329203b06ec8bb7e6cae2674",
+        "hash": "3e369bad4899b78db31941dfea4be97a1da62f01ffac2eda39cb63b37a4a39a9"
+    },
+    {
+        "id": "a9249e89-8bc6-4be7-90c1-e769b8e2555d",
+        "claim_id": "CLM-af5b673365",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T11:51:50.950745",
+        "details": {
+            "dob": "12-07-1996",
+            "npi": "123456789"
+        },
+        "prev_hash": "3e369bad4899b78db31941dfea4be97a1da62f01ffac2eda39cb63b37a4a39a9",
+        "hash": "55ed4eff1015e8011af8e3ed7b3ae22243f25fa06af88847d06ad9bf62e5bf53"
+    },
+    {
+        "id": "03c1c383-0c1a-4a52-a4a5-c5f3acb553d1",
+        "claim_id": "CLM-af5b673365",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T11:52:01.271714",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "Kiran",
+            "approved_at": "2026-04-09T11:52:00.613951"
+        },
+        "prev_hash": "55ed4eff1015e8011af8e3ed7b3ae22243f25fa06af88847d06ad9bf62e5bf53",
+        "hash": "02c9316e33ba331f58fcd1d6cb7b6d87bacf10631e46786383213d5058a86912"
+    },
+    {
+        "id": "6368e115-3d05-4879-ac4f-758c7da99b7e",
+        "claim_id": "CLM-af5b673365",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T11:55:44.371569",
+        "details": {
+            "errors": [
+                "Missing patient name",
+                "No services found"
+            ]
+        },
+        "prev_hash": "02c9316e33ba331f58fcd1d6cb7b6d87bacf10631e46786383213d5058a86912",
+        "hash": "6ecefc9843ac44080c0264f0dc89953183dca339c43cd89863adab1e472d8c07"
+    },
+    {
+        "id": "e43ac0a8-bf6d-4ec4-b99b-d69c6b411de8",
+        "claim_id": "CLM-af5b673365",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T11:58:42.282278",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "Kiran",
+            "approved_at": "2026-04-09T11:58:41.639610"
+        },
+        "prev_hash": "6ecefc9843ac44080c0264f0dc89953183dca339c43cd89863adab1e472d8c07",
+        "hash": "f6d8a55434993114d420ae1b972e8380b7a463dd32787e4ee22ee01693918542"
+    },
+    {
+        "id": "f06cf6ac-02b6-4e8f-a9ff-fbdb4e4a7910",
+        "claim_id": "CLM-af5b673365",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T11:58:42.984743",
+        "details": {
+            "errors": [
+                "Missing patient name",
+                "No services found"
+            ]
+        },
+        "prev_hash": "f6d8a55434993114d420ae1b972e8380b7a463dd32787e4ee22ee01693918542",
+        "hash": "00dcdefceab7fb837561624b1cc0ab706021068da6c0687c9aba58ce5606d55c"
+    },
+    {
+        "id": "6ad5f9c5-748e-4bdb-aa61-17aa77a1a16c",
+        "claim_id": "CLM-7a0632d72e",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:14:28.780696",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "00dcdefceab7fb837561624b1cc0ab706021068da6c0687c9aba58ce5606d55c",
+        "hash": "4e745394f242fe81771c03f06364d635aa1a1dbc8e378e530c7fbc982de5d3fe"
+    },
+    {
+        "id": "31ebb0cd-9375-4494-b0ce-3f183a7e5230",
+        "claim_id": "CLM-7a0632d72e",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T12:14:29.104109",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "4e745394f242fe81771c03f06364d635aa1a1dbc8e378e530c7fbc982de5d3fe",
+        "hash": "010aad208226b981a91acf3d9f4aa0fb95e957a2d327dbf166c1d2cc3e370d00"
+    },
+    {
+        "id": "11fc5c53-ab2e-47c3-84b1-eae76b442a0c",
+        "claim_id": "CLM-7a0632d72e",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T12:15:32.712244",
+        "details": {
+            "dob": "12-09-2007",
+            "npi": "12345678"
+        },
+        "prev_hash": "010aad208226b981a91acf3d9f4aa0fb95e957a2d327dbf166c1d2cc3e370d00",
+        "hash": "b9cff06f169857fd4f5d382f7652cd9086d520fd5450a538b287cbf48805be17"
+    },
+    {
+        "id": "0d577bbf-904c-4580-a36d-3e6d7f418fcd",
+        "claim_id": "CLM-7a0632d72e",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:15:51.284105",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "Kiran",
+            "approved_at": "2026-04-09T12:15:50.657587"
+        },
+        "prev_hash": "b9cff06f169857fd4f5d382f7652cd9086d520fd5450a538b287cbf48805be17",
+        "hash": "63e9c438913f1eb31f1077745346a89582a92062c5b4905295244c0945ff0184"
+    },
+    {
+        "id": "262b8521-d4e4-4196-b6fd-e1e6fd278c8e",
+        "claim_id": "CLM-7a0632d72e",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T12:15:51.708227",
+        "details": {},
+        "prev_hash": "63e9c438913f1eb31f1077745346a89582a92062c5b4905295244c0945ff0184",
+        "hash": "5dcd1453393e3085eb3a978908c7ab54a4aabab803c451f0aef92e1fb2d0ccf6"
+    },
+    {
+        "id": "c0f02bbe-6631-4da1-8ec1-8dac29356979",
+        "claim_id": "CLM-1b40224556",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:20:18.308387",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "5dcd1453393e3085eb3a978908c7ab54a4aabab803c451f0aef92e1fb2d0ccf6",
+        "hash": "02e8c54beabc018d495e015bdf89dc9e038279d7ce1dddaf402735f5694e160a"
+    },
+    {
+        "id": "00ea4289-61a7-48e3-8b38-d340a198bb62",
+        "claim_id": "CLM-1b40224556",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T12:20:18.634168",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "02e8c54beabc018d495e015bdf89dc9e038279d7ce1dddaf402735f5694e160a",
+        "hash": "6a027bb5db4d4e5a8b3f9bd3774be5692b9de8c5a0a94b925d11d3c61a341b6f"
+    },
+    {
+        "id": "bf021226-fd95-421a-9642-e8ab395abf3b",
+        "claim_id": "CLM-1b40224556",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T12:20:58.910065",
+        "details": {
+            "dob": "12-09-1234",
+            "npi": "1234568"
+        },
+        "prev_hash": "6a027bb5db4d4e5a8b3f9bd3774be5692b9de8c5a0a94b925d11d3c61a341b6f",
+        "hash": "6e1a3e6495c3562f6bf6a76cc9a50c38aa35b966797a984df236a96d732ab080"
+    },
+    {
+        "id": "0bbadf92-5cc3-4873-bef6-969fb168be90",
+        "claim_id": "CLM-1b40224556",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:21:08.681116",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "Kiran",
+            "approved_at": "2026-04-09T12:21:08.052721"
+        },
+        "prev_hash": "6e1a3e6495c3562f6bf6a76cc9a50c38aa35b966797a984df236a96d732ab080",
+        "hash": "19a18529eadd9e50f4ac969911d41e422d3fc0ab5e84589df8081b7ec7092093"
+    },
+    {
+        "id": "252fd770-b9ec-4445-8c8c-4f6b42c3802e",
+        "claim_id": "CLM-1b40224556",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T12:21:09.001490",
+        "details": {},
+        "prev_hash": "19a18529eadd9e50f4ac969911d41e422d3fc0ab5e84589df8081b7ec7092093",
+        "hash": "5c32419397b3ca8f92bd205f416232c159cfa17d861e410c7189446d11d9b6ef"
+    },
+    {
+        "id": "e75a974e-4bcd-45ab-8272-42220ea78436",
+        "claim_id": "CLM-1b40224556",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:21:26.994462",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-9920ad08"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "5c32419397b3ca8f92bd205f416232c159cfa17d861e410c7189446d11d9b6ef",
+        "hash": "d56da01d64d1b846e7eee9d38482da765b7ddd6dedd1202478876f736c2765cd"
+    },
+    {
+        "id": "feb1c9bc-2598-492a-89ca-9f5bcc3a0e3b",
+        "claim_id": "CLM-1b40224556",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:21:27.006443",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "d56da01d64d1b846e7eee9d38482da765b7ddd6dedd1202478876f736c2765cd",
+        "hash": "2515823888a8664d9dd2043fe0476a828cc32e79a3801a8b45034b6d3532215a"
+    },
+    {
+        "id": "a850eab1-12e8-4ef7-b0af-6cd8ca7a73f0",
+        "claim_id": "CLM-1b40224556",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:21:27.323781",
+        "details": {
+            "expected": 150.0,
+            "received": 150.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "2515823888a8664d9dd2043fe0476a828cc32e79a3801a8b45034b6d3532215a",
+        "hash": "69caaa5c74762548bc48c90bf1dd1f0dab2ebf1aa45cab6a8ccd7a8bfdd54eff"
+    },
+    {
+        "id": "aff4e4ad-4995-48df-bd64-23b32e667310",
+        "claim_id": "CLM-07c718cae0",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:37:25.327488",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "69caaa5c74762548bc48c90bf1dd1f0dab2ebf1aa45cab6a8ccd7a8bfdd54eff",
+        "hash": "7badc4a053d13380a49c13956af6a36a328a073af9c889a64f9afb2c58b2ca01"
+    },
+    {
+        "id": "2c33a109-b3e7-42e7-add8-6e2de8864056",
+        "claim_id": "CLM-07c718cae0",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T12:37:25.352282",
+        "details": {},
+        "prev_hash": "7badc4a053d13380a49c13956af6a36a328a073af9c889a64f9afb2c58b2ca01",
+        "hash": "9ad0e05a41540bf0006c472a9932f5e290333be8540c56811f8408c93767bc6e"
+    },
+    {
+        "id": "3a96e7d7-2807-4028-97ea-63a9ceed9cb0",
+        "claim_id": "CLM-07c718cae0",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:38:33.447620",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-f01d121e"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "9ad0e05a41540bf0006c472a9932f5e290333be8540c56811f8408c93767bc6e",
+        "hash": "6cb67d96d76f380dc263950885e3129d20eaa18a5931bd4b7538776f4ba24834"
+    },
+    {
+        "id": "49d9aa00-05d2-4852-88d4-10d4c2f75931",
+        "claim_id": "CLM-07c718cae0",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:38:33.466789",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "6cb67d96d76f380dc263950885e3129d20eaa18a5931bd4b7538776f4ba24834",
+        "hash": "6f6a50d24b9fbae65034b2e6844ed825b72b24ab98bac5ee0b1ee227391348c8"
+    },
+    {
+        "id": "76b70b83-5820-443c-a5e7-77bdb3ca96a8",
+        "claim_id": "CLM-07c718cae0",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:38:33.859594",
+        "details": {
+            "expected": 400.0,
+            "received": 400.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "6f6a50d24b9fbae65034b2e6844ed825b72b24ab98bac5ee0b1ee227391348c8",
+        "hash": "520503492098a6355d0e6ea270f14a57de72a8807ded0b6b1d1954d214fc98e5"
+    },
+    {
+        "id": "08ff10ee-810f-4c24-b31d-f9ded15f3c34",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "eligibility",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:42:29.183012",
+        "details": {
+            "eligibility_status": "verified"
+        },
+        "prev_hash": "520503492098a6355d0e6ea270f14a57de72a8807ded0b6b1d1954d214fc98e5",
+        "hash": "9cfcafdcec751f8898017548583a849a00e1036aa12a447c73614eea9a3ca2d1"
+    },
+    {
+        "id": "8e7e2148-45a9-49cb-8688-7ac90916085a",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T12:42:29.558666",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "9cfcafdcec751f8898017548583a849a00e1036aa12a447c73614eea9a3ca2d1",
+        "hash": "4d7874a7e439689d8ebfcfc438f6b1813093d202a52dfdf0769a4ef26586ed5f"
+    },
+    {
+        "id": "5c7a2aa1-36aa-4118-969c-dd901a60888a",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "approval",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:43:11.761209",
+        "details": {
+            "status": "APPROVED",
+            "approved_by": "Kiran",
+            "approved_at": "2026-04-09T12:43:11.081153"
+        },
+        "prev_hash": "4d7874a7e439689d8ebfcfc438f6b1813093d202a52dfdf0769a4ef26586ed5f",
+        "hash": "50b469a8dc18ab36ae383e9a3192a25fa98a12e5c241c9f48c71d235c92628b3"
+    },
+    {
+        "id": "906155ef-b8a8-49d3-96e4-f90ac0bd845d",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "validation",
+        "status": "failed",
+        "timestamp": "2026-04-09T12:43:12.491840",
+        "details": {
+            "errors": [
+                "Missing patient DOB",
+                "Provider NPI missing"
+            ]
+        },
+        "prev_hash": "50b469a8dc18ab36ae383e9a3192a25fa98a12e5c241c9f48c71d235c92628b3",
+        "hash": "71e3585a5daa3b2a6e1bc2d41db4f0f3e09085e971ac8319015059fdd297f41f"
+    },
+    {
+        "id": "1502af8f-308f-4249-a737-cb6315fb60e3",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "fix",
+        "status": "user_updated",
+        "timestamp": "2026-04-09T12:44:23.521491",
+        "details": {
+            "dob": "12-06-1998",
+            "npi": "1234567"
+        },
+        "prev_hash": "71e3585a5daa3b2a6e1bc2d41db4f0f3e09085e971ac8319015059fdd297f41f",
+        "hash": "73ff6723f5eaa6d6ea598ec0e789ea4548b0f992c733065c99b968663941f9e0"
+    },
+    {
+        "id": "7a935776-bca1-4b82-8ed1-fe7129ed8d8d",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "validation",
+        "status": "passed",
+        "timestamp": "2026-04-09T12:45:47.164135",
+        "details": {},
+        "prev_hash": "73ff6723f5eaa6d6ea598ec0e789ea4548b0f992c733065c99b968663941f9e0",
+        "hash": "aa44c8cf1b1452cc02f401994620968d7468bb8a8556d5e28809b51f417c2f8e"
+    },
+    {
+        "id": "2868da8a-a45e-4311-ab12-9c0ee12853bf",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "acknowledgment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:46:00.444286",
+        "details": {
+            "999": {
+                "ack_code": "999",
+                "status": "ACCEPTED",
+                "message": "EDI accepted at syntax level"
+            },
+            "277ca": {
+                "type": "277CA",
+                "status": "ACCEPTED",
+                "claim_id": "SUB-801d1bd5"
+            },
+            "raw": {
+                "status": "ACK_RECEIVED"
+            }
+        },
+        "prev_hash": "aa44c8cf1b1452cc02f401994620968d7468bb8a8556d5e28809b51f417c2f8e",
+        "hash": "1cdd9edae5c091a835f9bdb7ec01e7abda0841d30f1a3d8d9b6257ad7c64cbe6"
+    },
+    {
+        "id": "6221b2d9-e480-4a37-b1f5-5b878a677d7f",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "denial",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:46:00.473089",
+        "details": {
+            "risk_score": 0.1,
+            "reason": "Clear to pay",
+            "suggestion": null
+        },
+        "prev_hash": "1cdd9edae5c091a835f9bdb7ec01e7abda0841d30f1a3d8d9b6257ad7c64cbe6",
+        "hash": "a9bc6ba04e5ae2c877ace55c2ba200ae3e9b8398ea55f40eced6b87fa04a001b"
+    },
+    {
+        "id": "00a5bef5-34eb-49a5-84c1-6b0d66ca2b56",
+        "claim_id": "CLM-9b4fb7857e",
+        "step": "payment",
+        "status": "completed",
+        "timestamp": "2026-04-09T12:46:00.788030",
+        "details": {
+            "expected": 150.0,
+            "received": 150.0,
+            "adjustment": 0.0,
+            "status": "paid"
+        },
+        "prev_hash": "a9bc6ba04e5ae2c877ace55c2ba200ae3e9b8398ea55f40eced6b87fa04a001b",
+        "hash": "61f9c0a90b018fcf18b946911b391ff07cfaca95b7e780973e53f0c1a86b49c8"
+    }
+]

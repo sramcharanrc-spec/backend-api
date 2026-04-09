@@ -6,7 +6,22 @@ import json
 from app.websocket.manager import manager
 from app.utils.response_builder import build_clean_response
 from app.intake.processor import process_document
-from app.intake.db_service import get_record_by_id
+
+from app.intake.db_service import get_record_by_id, save_record
+
+from app.agents.denial.denial_agent import DenialAgent
+from app.agents.acknowledgment.acknowledgment_agent import AcknowledgmentAgent
+from app.agents.analytics.analytics_agent import AnalyticsAgent
+from app.agents.payment.payment_agent import PaymentAgent
+from app.agents.validation.validation_agent import ValidationAgent
+from app.agents.submission.submission_agent import SubmissionAgent
+# (add analytics later if needed)
+
+
+
+
+
+
 # -------------------------
 # RCM Core
 # -------------------------
@@ -118,18 +133,44 @@ async def submit(file: UploadFile = File(...)):
 @router.post("/start-pipeline/{claim_id}")
 async def start_pipeline(claim_id: str):
 
-    print(f"🚀 Starting pipeline for {claim_id}")
+    record = get_record_by_id(claim_id)
 
-    # 🔥 RUN IN BACKGROUND (NON-BLOCKING)
-    asyncio.create_task(
-        process_document("ehr-claims-bucket-agenticai", claim_id)
-    )
+    if not record:
+        return {"error": "Claim not found"}
 
-    return {
-        "status": "started",
-        "claim_id": claim_id
-    }
+    claim = record.get("claim", {})
 
+    try:
+        print("🚀 Running ValidationAgent...")
+        validation_result = await ValidationAgent().run(claim)
+        claim = validation_result["claim"]
+
+        if not validation_result.get("valid", True):
+            record["status"] = "VALIDATION_FAILED"
+            save_record(record)
+            return {"message": "Validation failed"}
+
+        print("🚀 Running SubmissionAgent...")
+        submission_result = await SubmissionAgent().run(claim)
+        claim = submission_result["claim"]
+
+        # ✅ STOP HERE
+        record["pipeline"]["steps"]["rules_validated"] = True
+        record["pipeline"]["steps"]["submitted"] = True
+
+        record["status"] = "PENDING_APPROVAL"
+
+        save_record(record)
+
+        return {
+            "message": "Sent to clearinghouse",
+            "status": record["status"],
+            "pipeline": record["pipeline"]
+        }
+
+    except Exception as e:
+        print("❌ Pipeline error:", str(e))
+        return {"error": str(e)}
 
 
 # =========================
@@ -162,96 +203,83 @@ async def submit_from_s3(payload: SubmitFromS3Request):
     # -------------------------
     # 🔹 Step 2: Map claim
     # -------------------------
-    mapped_claim = map_s3_json_to_claim(raw_data)
+    claim = map_s3_json_to_claim(raw_data)
 
     # -------------------------
-    # 🔥 Step 3: INITIAL STATE
+    # 🔥 Step 3: VALIDATION
     # -------------------------
-    state = {
-        "claim": mapped_claim,
-        "stage": "start",
-        "pipeline": {
-            "steps": {
-                "case_orchestrated": False,
-                "eligibility_checked": False,
-                "rules_validated": False,
-                "submitted": False,
-                "denial_checked": False,
-                "paid": False,
-                "analytics_done": False
-            }
+    print("🚀 Running ValidationAgent...")
+    validation = await ValidationAgent().run(claim)
+
+    claim = validation["claim"]
+
+    if not validation.get("valid", True):
+        return {
+            "status": "VALIDATION_FAILED",
+            "errors": validation.get("errors", [])
+        }
+
+    # -------------------------
+    # 🔥 Step 4: SUBMISSION
+    # -------------------------
+    print("🚀 Running SubmissionAgent...")
+    submission = await SubmissionAgent().run(claim)
+
+    claim = submission["claim"]
+
+    # -------------------------
+    # 🔥 Step 5: STOP PIPELINE
+    # -------------------------
+    pipeline = {
+        "steps": {
+            "case_orchestrated": True,
+            "eligibility_checked": True,
+            "rules_validated": True,
+            "submitted": True,
+            "acknowledged": False,
+            "denial_checked": False,
+            "paid": False,
+            "analytics_done": False
         }
     }
 
-    # -------------------------
-    # 🔹 Step 4: Run pipeline
-    # -------------------------
-    # -------------------------
-# 🔹 Step 4: Run pipeline
-# -------------------------
-    try:
-        await rcm_graph.ainvoke(
-        state,
-        {"recursion_limit": 50}
-    )
-    except Exception as e:
-        print("❌ Pipeline execution error:", str(e))
-        raise HTTPException(
-            status_code=500,
-            detail=f"Pipeline failed: {str(e)}"
-        )
+    status = "PENDING_APPROVAL"
 
     # -------------------------
-    # 🔥 Step 5: FINAL SAFE MERGE (CRITICAL FIX)
+    # 🔹 Step 6: SAVE RECORD
     # -------------------------
+    record = {
+        "claim_id": claim.get("claim_id"),
+        "file": None,
+        "status": status,
+        "claim": claim,
+        "pipeline": pipeline,
+        "case": {},
+        "denial": None,
+        "payment": None
+    }
 
-
-# LangGraph already mutates state → use it directly
-    final_state = state
-
-    print("🚀 FINAL PIPELINE STATE:", final_state.get("pipeline"))
+    save_record(record)
 
     # -------------------------
-    # 🔹 Step 6: WebSocket update
+    # 🔹 Step 7: WS EVENT
     # -------------------------
     await manager.broadcast({
         "type": "agent_event",
-        "step": final_state.get("stage", "unknown"),
+        "step": "submission",
         "status": "completed",
-        "data": final_state.get("pipeline", {})
+        "data": {
+            "status": status,
+            "submission_id": claim.get("submission_id")
+        }
     })
 
-    # -------------------------
-    # 🔹 Step 7: Save record
-    # -------------------------
-    save_record({
-        "claim_id": final_state.get("claim", {}).get("claim_id"),
-        "file": None,
-        "status": final_state.get("claim", {}).get("status", "processed"),
-
-        # core
-        "claim": final_state.get("claim"),
-        "pipeline": final_state.get("pipeline", {}),
-
-        # orchestration
-        "case": final_state.get("case", {}),
-
-        # outputs
-        "denial": final_state.get("claim", {}).get("denial_risk"),
-        "payment": final_state.get("financials", {})
-    })
+    print("⏸ Waiting for clearinghouse approval...")
 
     # -------------------------
-    # 🔹 Step 8: Clean response
+    # 🔹 Step 8: RESPONSE
     # -------------------------
-    clean_response = build_clean_response({
-        "claim": final_state.get("claim"),
-        "pipeline": final_state.get("pipeline"),
-        "case": final_state.get("case", {}),
-        "payment": final_state.get("financials", {})
-    })
-
-    return clean_response
+    return build_clean_response(record)
 
 # =========================
 # Submission Status
@@ -539,4 +567,276 @@ def get_ai_suggestions(claim_id: str):
     return {
         "claim_id": claim_id,
         "suggestions": suggestions
+    }
+
+
+
+@router.post("/approve/{claim_id}")
+async def approve_claim(claim_id: str):
+
+    print("✅ APPROVE TRIGGERED:", claim_id)
+
+    record = get_record_by_id(claim_id)
+
+    if not record:
+        return {"error": "Claim not found"}
+
+    # 🔥 NEW: STATE VALIDATION (CRITICAL)
+    current_status = record.get("status")
+
+    if current_status == "COMPLETED":
+        return {"error": "Claim already completed"}
+
+    if current_status != "PENDING_APPROVAL":
+        return {"error": f"Cannot approve claim in {current_status} state"}
+
+    claim = record.get("claim", {})
+    steps = record.get("pipeline", {}).get("steps", {})
+
+    # ✅ 1. ACKNOWLEDGMENT
+    if not steps.get("acknowledged"):
+        print("🚀 Running AcknowledgmentAgent...")
+        ack_result = await AcknowledgmentAgent().run(claim)
+        claim = ack_result["claim"]
+        steps["acknowledged"] = True
+
+    # ✅ 2. DENIAL
+    if not steps.get("denial_checked"):
+        print("🚀 Running DenialAgent...")
+        denial_result = await DenialAgent().run(claim)
+        claim = denial_result["claim"]
+        steps["denial_checked"] = True
+
+    # ✅ 3. PAYMENT
+    if not steps.get("paid"):
+        print("🚀 Running PaymentAgent...")
+        payment_result = await PaymentAgent().run(claim)
+        claim = payment_result["claim"]
+        steps["paid"] = True
+
+    # ✅ 4. ANALYTICS
+    if not steps.get("analytics_done"):
+        print("🚀 Running AnalyticsAgent...")
+        analytics_result = await AnalyticsAgent().run(claim)
+        claim = analytics_result["claim"]
+        steps["analytics_done"] = True
+
+    # 🔥 UPDATE RECORD
+    record["claim"] = claim
+    record["pipeline"]["steps"] = steps
+
+    # ✅ FINAL STATUS
+    record["status"] = "COMPLETED"
+
+    save_record(record)
+
+    return {
+        "message": "Pipeline resumed successfully",
+        "status": record["status"],
+        "pipeline": record["pipeline"]
+    }
+
+@router.post("/claim/{claim_id}/complete")
+async def complete_claim(claim_id: str):
+
+    record = get_record_by_id(claim_id)
+
+    if not record:
+        return {"error": "Claim not found"}
+
+    claim = record["claim"]
+
+    # -------------------------
+    # 🔥 Mark as completed
+    # -------------------------
+    claim["payment_status"] = "settled"
+    claim["status"] = "completed"
+
+    # update pipeline
+    record["pipeline"]["steps"]["paid"] = True
+
+    # update final status
+    record["status"] = "COMPLETED"
+
+    # -------------------------
+    # 🔥 close case if exists
+    # -------------------------
+    if record.get("case"):
+        record["case"]["status"] = "CLOSED"
+
+    # -------------------------
+    # 🔥 audit log
+    # -------------------------
+    from app.services.audit_service import log_audit
+
+    log_audit(
+        claim_id,
+        "manual_settlement",
+        "completed",
+        {"action": "Patient paid remaining amount"}
+    )
+
+    # -------------------------
+    # 🔥 save
+    # -------------------------
+    save_record(record)
+
+    return {
+        "message": "Claim marked as completed",
+        "status": "COMPLETED"
+    }
+
+@router.post("/claim/{claim_id}/patient-pay")
+async def patient_pay(claim_id: str):
+
+    record = get_record_by_id(claim_id)
+    if not record:
+        return {"error": "Claim not found"}
+
+    claim = record["claim"]
+    payment = record.get("payment", {})
+
+    remaining = payment.get("adjustment", 0)
+
+    # -------------------------
+    # 🔥 Mark as patient paid
+    # -------------------------
+    claim["payment_status"] = "settled"
+    claim["settlement_type"] = "patient_paid"
+    claim["patient_paid_amount"] = remaining
+
+    record["status"] = "COMPLETED"
+
+    # close case if exists
+    if record.get("case"):
+        record["case"]["status"] = "CLOSED"
+
+    # audit
+    from app.services.audit_service import log_audit
+    log_audit(claim_id, "patient_payment", "completed", {
+        "amount": remaining
+    })
+
+    save_record(record)
+
+    return {
+        "message": "Patient paid remaining amount",
+        "status": "COMPLETED"
+    }
+
+@router.post("/claim/{claim_id}/writeoff")
+async def writeoff(claim_id: str):
+
+    record = get_record_by_id(claim_id)
+    if not record:
+        return {"error": "Claim not found"}
+
+    claim = record["claim"]
+    payment = record.get("payment", {})
+
+    adjustment = payment.get("adjustment", 0)
+
+    # -------------------------
+    # 🔥 Write-off logic
+    # -------------------------
+    claim["payment_status"] = "written_off"
+    claim["settlement_type"] = "writeoff"
+    claim["writeoff_amount"] = adjustment
+
+    record["status"] = "COMPLETED"
+
+    # close case
+    if record.get("case"):
+        record["case"]["status"] = "CLOSED"
+
+    # audit
+    from app.services.audit_service import log_audit
+    log_audit(claim_id, "writeoff", "completed", {
+        "amount": adjustment
+    })
+
+    save_record(record)
+
+    return {
+        "message": "Amount written off",
+        "status": "COMPLETED"
+    }
+
+@router.post("/claim/{claim_id}/writeoff")
+async def writeoff(claim_id: str):
+
+    record = get_record_by_id(claim_id)
+    if not record:
+        return {"error": "Claim not found"}
+
+    claim = record["claim"]
+    payment = record.get("payment", {})
+
+    adjustment = payment.get("adjustment", 0)
+
+    # -------------------------
+    # 🔥 Write-off logic
+    # -------------------------
+    claim["payment_status"] = "written_off"
+    claim["settlement_type"] = "writeoff"
+    claim["writeoff_amount"] = adjustment
+
+    record["status"] = "COMPLETED"
+
+    # close case
+    if record.get("case"):
+        record["case"]["status"] = "CLOSED"
+
+    # audit
+    from app.services.audit_service import log_audit
+    log_audit(claim_id, "writeoff", "completed", {
+        "amount": adjustment
+    })
+
+    save_record(record)
+
+    return {
+        "message": "Amount written off",
+        "status": "COMPLETED"
+    }
+
+@router.post("/reject/{claim_id}")
+async def reject_claim(claim_id: str):
+
+    record = get_record_by_id(claim_id)
+
+    if not record:
+        return {"error": "Claim not found"}
+
+    # 🔥 NEW: STATE VALIDATION
+    current_status = record.get("status")
+
+    if current_status == "COMPLETED":
+        return {"error": "Cannot reject a completed claim"}
+
+    if current_status != "PENDING_APPROVAL":
+        return {"error": f"Cannot reject claim in {current_status} state"}
+
+    # 🔥 Mark rejected
+    record["status"] = "REJECTED"
+
+    # 🔥 Reset pipeline AFTER submission
+    steps = record.get("pipeline", {}).get("steps", {})
+
+    steps["submitted"] = False
+    steps["acknowledged"] = False
+    steps["denial_checked"] = False
+    steps["paid"] = False
+    steps["analytics_done"] = False
+
+    record["pipeline"]["steps"] = steps
+
+    # Optional: store reason
+    record["rejection_reason"] = "Rejected at clearinghouse"
+
+    save_record(record)
+
+    return {
+        "message": "Claim rejected. Sent back to validation.",
+        "status": record["status"]
     }

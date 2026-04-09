@@ -146,7 +146,63 @@
 
 
 
+# from app.agents.base.base_agent import BaseAgent
+
+# class PaymentAgent(BaseAgent):
+
+#     async def run(self, claim):
+
+#         print("💰 [PaymentAgent] Started")
+        
+#         # If it wasn't marked paid, simulate partial payment occasionally
+#         total = claim.get("total_charge", 0)
+
+#         if claim.get("status") == "paid":
+#             received = total
+#         else:
+#             received = total * 0.95
+
+#         adjustment = total - received
+
+#         status = "paid" if received == total else "underpaid"
+
+#         claim["payment_status"] = status
+
+#         financials = {
+#             "expected": total,
+#             "received": received,
+#             "adjustment": adjustment,
+#             "status": status
+#         }
+
+#         from app.services.audit_service import log_audit
+#         from app.websocket.manager import manager
+        
+#         log_audit(claim.get("claim_id"), "payment", "completed", financials)
+#         await manager.send_event("payment", "completed", financials)
+
+#         return {
+#             "claim": claim,
+#             "financials": financials,
+#             "pipeline": {
+#                 "steps": {
+#                     "paid": True
+#                 }
+#             },
+#             "stage": "paid"
+#         }
+
 from app.agents.base.base_agent import BaseAgent
+
+# 🆕 ADD THESE
+from app.rcm.edi_responses import generate_era_835
+from app.intake.db_service import update_record_status
+from app.rcm.submission import (
+    fetch_status,
+    record_ack,
+    record_denial,
+)
+
 
 class PaymentAgent(BaseAgent):
 
@@ -155,20 +211,94 @@ class PaymentAgent(BaseAgent):
         print("💰 [PaymentAgent] Started")
 
         total = claim.get("total_charge", 0)
+        submission_id = claim.get("submission_id")
 
-        received = total * 0.95
-        adjustment = total - received
+        # -------------------------
+        # 🔹 1. Check ACK status
+        # -------------------------
+        ack_status = claim.get("ack", {}).get("ack_277", {}).get("status")
 
-        status = "paid" if received == total else "partial"
+        # -------------------------
+        # ❌ DENIED FLOW
+        # -------------------------
+        if ack_status == "REJECTED":
 
-        claim["payment_status"] = status
+            record_denial(
+                submission_id,
+                "D001",
+                "Rejected by payer"
+            )
 
-        financials = {
-            "expected": total,
-            "received": received,
-            "adjustment": adjustment,
-            "status": status
-        }
+            claim["status"] = "denied"
+            claim["payment_status"] = "denied"
+
+            financials = {
+                "expected": total,
+                "received": 0,
+                "adjustment": total,
+                "status": "denied"
+            }
+
+        else:
+            # -------------------------
+            # 🔥 2. GENERATE ERA FIRST
+            # -------------------------
+            era = generate_era_835(submission_id, total)
+
+            claim["payment"] = era
+
+            # -------------------------
+            # 🔥 3. USE ERA AS SOURCE OF TRUTH
+            # -------------------------
+            received = era.get("paid_amount", total)
+
+            adjustment = total - received
+
+            if received == 0:
+                status = "denied"
+            elif adjustment == 0:
+                status = "paid"
+            else:
+                status = "underpaid"
+
+            claim["payment_status"] = status
+
+            # -------------------------
+            # 🔹 4. UPDATE DB STATUS
+            # -------------------------
+            if status == "paid":
+                update_record_status(claim["claim_id"], "PAID")
+
+            elif status == "underpaid":
+                update_record_status(claim["claim_id"], "UNDERPAID")
+
+            else:
+                update_record_status(claim["claim_id"], "DENIED")
+
+            # -------------------------
+            # 🔹 5. FINANCIAL SUMMARY
+            # -------------------------
+            financials = {
+                "expected": total,
+                "received": received,
+                "adjustment": adjustment,
+                "status": status
+            }
+
+        # -------------------------
+        # 🔹 6. AUDIT + EVENTS
+        # -------------------------
+        from app.services.audit_service import log_audit
+        from app.websocket.manager import manager
+
+        log_audit(
+            claim.get("claim_id"),
+            "payment",
+            "completed",
+            financials
+        )
+
+        await manager.send_event("payment", "completed", financials)
 
         return {
             "claim": claim,

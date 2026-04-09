@@ -3,7 +3,13 @@ import json
 import asyncio
 import re
 
-bedrock = boto3.client("bedrock-runtime", region_name="us-east-1")
+# bedrock = boto3.client("bedrock-runtime", region_name="us-east-1")
+
+bedrock = boto3.client(
+    "bedrock-runtime",
+    region_name="us-east-1",
+   
+)
 
 
 def generate_fix_suggestion(field, error, claim):

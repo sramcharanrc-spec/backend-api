@@ -2,12 +2,27 @@ import datetime
 import uuid
 import json
 import hashlib
+import os
 
-# In-memory (replace with DB later)
 from threading import Lock
 
-audit_logs = []        # ✅ REQUIRED GLOBAL
-audit_lock = Lock()    # ✅ thread safety
+AUDIT_FILE = "audit_log.json"
+
+def load_audit_logs():
+    if not os.path.exists(AUDIT_FILE):
+        return []
+    try:
+        with open(AUDIT_FILE, 'r') as f:
+            return json.load(f)
+    except:
+        return []
+
+audit_logs = load_audit_logs()
+audit_lock = Lock()
+
+def _save_audit_logs():
+    with open(AUDIT_FILE, 'w') as f:
+        json.dump(audit_logs, f, indent=4)
 
 def clean_entry(entry):
     return {k: v for k, v in entry.items() if k != "hash"}
@@ -58,6 +73,7 @@ def log_audit(claim_id, step, status, details=None):
         entry["hash"] = generate_hash(entry, prev_hash)
 
         audit_logs.append(entry)
+        _save_audit_logs()
 
         return entry
 
