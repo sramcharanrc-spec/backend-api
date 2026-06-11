@@ -1,56 +1,24 @@
-# app/rcm/analytics.py
+from __future__ import annotations
 
-import sqlite3
-
-DB_PATH = "app/rcm/rcm_dev.sqlite"
+from app.lambdas.Shared.store import get_all_submissions
 
 
-def _get_conn():
-    return sqlite3.connect(DB_PATH)
-
-
-def get_kpis():
-    conn = _get_conn()
-    cur = conn.cursor()
-
-    cur.execute("SELECT COUNT(*) FROM submissions")
-    total = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM submissions WHERE status = 'SUBMITTED'")
-    submitted = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM submissions WHERE status = 'DENIED'")
-    denied = cur.fetchone()[0]
-
-    cur.execute("SELECT COUNT(*) FROM submissions WHERE status LIKE '%PAID%'")
-    paid = cur.fetchone()[0]
-
-    conn.close()
-
+def get_kpis() -> dict:
+    submissions = get_all_submissions()
+    total = len(submissions)
+    paid = sum(1 for item in submissions if item.get("status") == "PAID")
+    denied = sum(1 for item in submissions if item.get("status") == "DENIED")
     return {
-        "total_claims": total,
-        "submitted": submitted,
-        "denied": denied,
-        "paid": paid
+        "total_submissions": total,
+        "paid_count": paid,
+        "denied_count": denied,
+        "payment_rate": paid / total if total else 0,
+        "denial_rate": denied / total if total else 0,
     }
 
 
-def analytics_dashboard():
-    conn = _get_conn()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT status, COUNT(*)
-        FROM submissions
-        GROUP BY status
-    """)
-
-    rows = cur.fetchall()
-    conn.close()
-
+def analytics_dashboard() -> dict:
     return {
-        "status_breakdown": [
-            {"status": r[0], "count": r[1]}
-            for r in rows
-        ]
+        "kpis": get_kpis(),
+        "submissions": get_all_submissions(),
     }

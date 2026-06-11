@@ -76,12 +76,14 @@
 import uuid
 import random
 import time
+from app.utils.security import mask_sensitive_payload
+
 
 def send_to_clearinghouse(edi_payload: str) -> dict:
 
     transmission_id = str(uuid.uuid4())
 
-    print("📤 Sending to Clearinghouse:", edi_payload)
+    print("📤 Sending to Clearinghouse:", mask_sensitive_payload(edi_payload))
 
     # Simulate processing delay
     time.sleep(1)

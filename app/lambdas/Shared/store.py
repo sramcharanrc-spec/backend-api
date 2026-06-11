@@ -1,178 +1,44 @@
-# app/rcm/store.py
+from __future__ import annotations
 
-import sqlite3
 from datetime import datetime
-import threading
+from typing import Any
 
-DB_PATH = "app/rcm/rcm_dev.sqlite"
-_db_lock = threading.Lock()
-
-
-# -------------------------
-# DB CONNECTION
-# -------------------------
-def get_conn():
-    conn = sqlite3.connect(
-        DB_PATH,
-        timeout=30,
-        check_same_thread=False
-    )
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL;")
-    conn.execute("PRAGMA synchronous=NORMAL;")
-    return conn
+_SUBMISSIONS: dict[str, dict[str, Any]] = {}
 
 
-# -------------------------
-# INIT DB
-# -------------------------
-def init_db():
-    conn = get_conn()
-    cur = conn.cursor()
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS submissions (
-            submission_id TEXT PRIMARY KEY,
-            claim_id TEXT,
-            status TEXT NOT NULL,
-            transmission_id TEXT,
-            raw_edi TEXT,
-            ack_type TEXT,
-            status_history text,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        )
-    """)
-
-    conn.commit()
-    conn.close()
+def init_db() -> None:
+    """Compatibility no-op for older Lambda storage initialization."""
+    return None
 
 
-# MUST RUN ON IMPORT
-init_db()
-
-
-# -------------------------
-# UPSERT SUBMISSION
-# -------------------------
 def save_submission(
     submission_id: str,
-    claim_id: str | None,
-    status: str,
-    transmission_id: str | None,
-    raw_edi: str,
-    ack_type: str | None = None
-):
-    now = datetime.utcnow().isoformat()
-
-    with _db_lock:
-        conn = get_conn()
-        cur = conn.cursor()
-
-        cur.execute("""
-            INSERT INTO submissions (
-                submission_id,
-                claim_id,
-                status,
-                transmission_id,
-                raw_edi,
-                ack_type,
-                created_at,
-                updated_at
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(submission_id) DO UPDATE SET
-                claim_id = COALESCE(excluded.claim_id, submissions.claim_id),
-                status = excluded.status,
-                transmission_id = COALESCE(excluded.transmission_id, submissions.transmission_id),
-                raw_edi = CASE
-                    WHEN excluded.raw_edi != '' THEN excluded.raw_edi
-                    ELSE submissions.raw_edi
-                END,
-                ack_type = COALESCE(excluded.ack_type, submissions.ack_type),
-                updated_at = excluded.updated_at
-        """, (
-            submission_id,
-            claim_id,
-            status,
-            transmission_id,
-            raw_edi,
-            ack_type,
-            now,
-            now
-        ))
-
-        conn.commit()
-        conn.close()
+    claim_id: str | None = None,
+    status: str = "SUBMITTED",
+    transmission_id: str | None = None,
+    raw_edi: str = "",
+    **extra: Any,
+) -> dict[str, Any]:
+    existing = _SUBMISSIONS.get(submission_id, {})
+    record = {
+        **existing,
+        "submission_id": submission_id,
+        "claim_id": claim_id if claim_id is not None else existing.get("claim_id"),
+        "status": status,
+        "transmission_id": transmission_id if transmission_id is not None else existing.get("transmission_id"),
+        "raw_edi": raw_edi,
+        "updated_at": datetime.utcnow().isoformat(),
+        **extra,
+    }
+    record.setdefault("created_at", datetime.utcnow().isoformat())
+    _SUBMISSIONS[submission_id] = record
+    return record
 
 
-# -------------------------
-# FETCH SINGLE SUBMISSION
-# -------------------------
-def get_submission(submission_id: str):
-    conn = get_conn()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT
-            submission_id,
-            claim_id,
-            status,
-            transmission_id,
-            raw_edi,
-            ack_type,
-            created_at,
-            updated_at
-        FROM submissions
-        WHERE submission_id = ?
-    """, (submission_id,))
-
-    row = cur.fetchone()
-    conn.close()
-
-    if not row:
-        return None
-
-    return dict(row)
+def get_submission(submission_id: str) -> dict[str, Any] | None:
+    submission = _SUBMISSIONS.get(submission_id)
+    return dict(submission) if submission else None
 
 
-# -------------------------
-# FETCH ALL SUBMISSIONS
-# -------------------------
-def get_all_submissions():
-    conn = get_conn()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT
-            submission_id,
-            claim_id,
-            status,
-            transmission_id,
-            raw_edi,
-            ack_type,
-            created_at,
-            updated_at
-        FROM submissions
-    """)
-
-    rows = cur.fetchall()
-    conn.close()
-
-    return [dict(row) for row in rows]
-
-def get_submission_by_claim_id(claim_id: str):
-    conn = get_conn()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT * FROM submissions
-        WHERE claim_id = ?
-        ORDER BY updated_at DESC
-        LIMIT 1
-    """, (claim_id,))
-
-    row = cur.fetchone()
-    conn.close()
-
-    return dict(row) if row else None
+def get_all_submissions() -> list[dict[str, Any]]:
+    return list(_SUBMISSIONS.values())

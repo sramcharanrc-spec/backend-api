@@ -1,17 +1,20 @@
 import boto3
 import json
 import asyncio
+import os
 from botocore.config import Config
 
 
 class BedrockClient:
 
-    def __init__(self, model_id="anthropic.claude-3-sonnet-20240229-v1:0"):
+    def __init__(self, model_id=None):
+        model_id = model_id or os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-sonnet-20240229-v1:0")
+        region = os.getenv("AWS_REGION", "us-east-1")
         self.model_id = model_id
         self.client = boto3.client(
             "bedrock-runtime",
             config=Config(
-                region_name="us-east-1",
+                region_name=region,
                 retries={"max_attempts": 3}
             )
         )

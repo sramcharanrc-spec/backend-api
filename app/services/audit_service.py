@@ -3,6 +3,7 @@ import uuid
 import json
 import hashlib
 import os
+import asyncio
 
 from threading import Lock
 
@@ -84,6 +85,15 @@ def get_audit_logs(claim_id=None):
         return [log for log in audit_logs if log["claim_id"] == claim_id]
 
     return audit_logs
+
+
+async def audit_log(event, data):
+    return await asyncio.to_thread(log_audit, None, event, "logged", {"data": data})
+
+
+async def compliance_hook(template, risk):
+    await audit_log("template_detection", template)
+    await audit_log("denial_prediction", risk)
 
 
 # # 🔍 VERIFY INTEGRITY (VERY IMPORTANT)

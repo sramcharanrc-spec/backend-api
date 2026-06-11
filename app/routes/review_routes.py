@@ -4,10 +4,12 @@ import asyncio
 
 from app.intake.db_service import (
     get_record_by_id,
+    save_record,
     update_claim_data,
     update_record_status,
     get_all_records
 )
+from app.queue.queue_manager import claim_queue
 from app.rcm.rcm_graph import rcm_graph
 
 router = APIRouter(prefix="/review")
@@ -58,7 +60,7 @@ async def suggest_fields(claim_id: str):
         # 🔥 FIX 2: Provider NPI
         provider = claim.get("provider", {}) or {}
         if not provider.get("npi") or provider.get("npi") == "?":
-            suggestions["provider.npi"] = "1234567890"
+            suggestions["provider.npi"] = None
 
         # 🔥 FIX 3: Procedure Code
         if not claim.get("procedure_code"):
@@ -306,6 +308,62 @@ async def edit_and_resume(claim_id: str, updated_claim: dict):
         "stage": result.get("stage")
     }
 
+
+@router.post("/{claim_id}/accept")
+async def accept_and_submit(claim_id: str):
+    record = get_record_by_id(claim_id)
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Claim not found")
+
+    claim = copy.deepcopy(record.get("claim", {}))
+    if not claim:
+        raise HTTPException(status_code=400, detail="Claim payload is empty")
+
+    claim["claim_id"] = claim_id
+    case = record.get("case")
+
+    if isinstance(case, dict):
+        case["status"] = "ACCEPTED"
+        case.setdefault("history", []).append({
+            "action": "HUMAN_ACCEPTED",
+            "timestamp": record.get("updated_at"),
+        })
+        claim["case"] = case
+
+    job = claim_queue.enqueue(
+        "app.queue.jobs.process_claim_job",
+        claim,
+        True,
+        job_timeout=300,
+    )
+
+    pipeline = record.get("pipeline") or {"steps": {}}
+    pipeline.setdefault("steps", {})
+    pipeline["steps"]["case_orchestrated"] = True
+    pipeline["steps"]["human_accepted"] = True
+
+    save_record({
+        "claim_id": claim_id,
+        "status": "QUEUED_FOR_CLEARINGHOUSE",
+        "claim": claim,
+        "pipeline": pipeline,
+        "validation": {
+            "valid": True,
+            "human_accepted": True,
+            "errors": [],
+        },
+        "case": case,
+        "job_id": job.id,
+    })
+
+    return {
+        "status": "QUEUED_FOR_CLEARINGHOUSE",
+        "claim_id": claim_id,
+        "job_id": job.id,
+        "redirect": f"/api/job-status/{job.id}",
+    }
+
 # -------------------------
 # ✅ REVIEW LIST
 # -------------------------
@@ -318,12 +376,16 @@ def get_review_items():
 
     for r in records:
         status = r.get("status")
+        payload = r.get("payload") if isinstance(r.get("payload"), dict) else {}
+        claim = payload.get("claim", r.get("claim", {}))
+        case = payload.get("case")
 
         if status == "needs_review":
             review_items.append({
                 "claim_id": r.get("claim_id"),
-                "patient": r.get("claim", {}).get("patient", {}),
-                "status": status
+                "patient": claim.get("patient", {}),
+                "status": status,
+                "case": case
             })
 
     return review_items

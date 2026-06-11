@@ -1,55 +1,17 @@
-from ...rcm.alerts import detect_underpayment
-from app.lambdas.Shared.store import save_submission
+from __future__ import annotations
 
 
-def post_payment(payload: dict):
-    """
-    payload:
-    {
-      "submission_id": "...",
-      "expected_amount": 1000,
-      "paid_amount": 800
-    }
-    """
+def post_payment(payload: dict) -> dict:
+    amount = payload.get("paid_amount", payload.get("amount", payload.get("payment_amount", 0)))
+    try:
+        amount = float(amount)
+    except (TypeError, ValueError):
+        amount = 0.0
 
-    #  Validation (prevents KeyError)
-    required_fields = ["submission_id", "expected_amount", "paid_amount"]
-    missing = [f for f in required_fields if f not in payload]
-
-    if missing:
-        raise ValueError(f"Missing required fields: {missing}")
-
-    submission_id = payload["submission_id"]
-    expected = float(payload["expected_amount"])
-    paid = float(payload["paid_amount"])
-
-    #  Business logic
-    variance = expected - paid
-    alert = detect_underpayment(expected, paid)
-
-    if paid == expected:
-        status = "PAID"
-    elif paid < expected:
-        status = "UNDERPAID"
-    else:
-        status = "OVERPAID"
-
-    #  Persist payment outcome
-    save_submission(
-        submission_id=submission_id,
-        claim_id=None,
-        status=status,
-        transmission_id="835-AUTO",
-        raw_edi=f"EXPECTED:{expected}|PAID:{paid}|VARIANCE:{variance}",
-        ack_type="835"
-    )
-
-    # Response
     return {
-        "submission_id": submission_id,
-        "status": status,
-        "expected": expected,
-        "paid": paid,
-        "variance": variance,
-        "alert": alert
+        "submission_id": payload.get("submission_id", "UNKNOWN"),
+        "claim_id": payload.get("claim_id"),
+        "status": "PAID" if amount > 0 else payload.get("status", "PAYMENT_POSTED"),
+        "paid_amount": amount,
     }
+

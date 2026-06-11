@@ -1,0 +1,132 @@
+# import asyncio
+# from kafka import KafkaConsumer
+# import json
+
+# from app.intake.processor import process_single_claim
+# from app.db.claim_service import save_claim, update_claim
+
+# consumer = KafkaConsumer(
+#     "claims-topic",
+#     bootstrap_servers="localhost:9092",
+#     value_deserializer=lambda m: json.loads(m.decode("utf-8"))
+# )
+
+# print("🚀 Worker Started...")
+
+# for message in consumer:
+
+#     claim = message.value
+#     claim_id = claim.get("claim_id")
+
+#     # -------------------------
+#     # 📥 SAVE INITIAL STATE
+#     # -------------------------
+#     save_claim(
+#         claim_id,
+#         status="RECEIVED",
+#         stage="INTAKE"
+#     )
+
+#     try:
+#         # -------------------------
+#         # ⚙️ PROCESS CLAIM
+#         # -------------------------
+#         result = asyncio.run(process_single_claim(claim, "excel"))
+
+#         # -------------------------
+#         # ✅ UPDATE STATUS
+#         # -------------------------
+#         update_claim(
+#             result.get("claim_id"),
+#             result.get("status")
+#         )
+
+#     except Exception as e:
+
+#         print("❌ Error:", str(e))
+
+#         update_claim(
+#             claim_id,
+#             "FAILED"
+#         )
+
+import json
+from kafka import KafkaConsumer
+
+from app.db.claim_service import save_claim, update_claim
+from app.queue.jobs import process_claim_job
+from app.queue.producer import send_to_queue
+
+MAX_RETRIES = 3
+
+consumer = KafkaConsumer(
+    "claims-topic",
+    bootstrap_servers="localhost:9092",
+    value_deserializer=lambda m: json.loads(m.decode("utf-8"))
+)
+
+print("🚀 Kafka Worker Started...")
+
+for message in consumer:
+
+    claim = message.value
+    claim_id = claim.get("claim_id")
+    retries = claim.get("retries", 0)
+
+    print(f"📥 Received claim: {claim_id}")
+
+    # -------------------------
+    # 📥 SAVE INITIAL STATE
+    # -------------------------
+    save_claim(
+        claim_id,
+        status="RECEIVED",
+        stage="INTAKE"
+    )
+
+    try:
+        # -------------------------
+        # ⚙️ UPDATE STATUS → PROCESSING
+        # -------------------------
+        update_claim(claim_id, "PROCESSING")
+
+        # -------------------------
+        # ⚙️ PROCESS CLAIM
+        # -------------------------
+        result = process_claim_job(claim)
+
+        status = result.get("status")
+
+        # -------------------------
+        # ✅ UPDATE DB STATUS
+        # -------------------------
+        update_claim(claim_id, status)
+
+        # -------------------------
+        # 📡 SEND UI UPDATE
+        # -------------------------
+        # RQ workers emit WebSocket events inside process_claim_job/pipeline.
+
+        print(f"✅ Completed: {claim_id} → {status}")
+
+    except Exception as e:
+
+        print(f"❌ Error: {claim_id} → {str(e)}")
+
+        # -------------------------
+        # 🔁 RETRY LOGIC
+        # -------------------------
+        if retries < MAX_RETRIES:
+
+            claim["retries"] = retries + 1
+            send_to_queue(claim)
+
+            print(f"🔁 Retrying {claim_id} ({claim['retries']})")
+
+        else:
+            print(f"💀 Max retries reached: {claim_id}")
+
+            update_claim(claim_id, "FAILED")
+
+            # Optional: send to dead letter topic
+            # producer.send("failed-claims-topic", claim)

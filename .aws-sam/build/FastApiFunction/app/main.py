@@ -91,9 +91,24 @@ if allow_origins_env:
 else:
     allow_origins = [dev_frontend, "http://localhost:3000", "http://127.0.0.1:5173"]
 
+configured_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+frontend_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allow_origins or ["*"],
+    allow_origins=configured_origins or frontend_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

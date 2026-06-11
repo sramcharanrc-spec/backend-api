@@ -1,23 +1,14 @@
-# app/rcm/reconciliation.py
+from __future__ import annotations
 
-from app.lambdas.Shared.store import get_conn
+from app.lambdas.Shared.store import get_all_submissions
 
 
-def reconciliation_report():
-    conn = get_conn()
-    cur = conn.cursor()
+def reconciliation_report() -> dict:
+    submissions = get_all_submissions()
+    return {
+        "total_submissions": len(submissions),
+        "paid": sum(1 for item in submissions if item.get("status") == "PAID"),
+        "denied": sum(1 for item in submissions if item.get("status") == "DENIED"),
+        "open": sum(1 for item in submissions if item.get("status") not in {"PAID", "DENIED"}),
+    }
 
-    cur.execute("""
-        SELECT status, COUNT(*)
-        FROM submissions
-        WHERE status IN ('PAID', 'UNDERPAID')
-        GROUP BY status
-    """)
-
-    rows = cur.fetchall()
-    conn.close()
-
-    report = {status: count for status, count in rows}
-    report["total_reconciled"] = sum(report.values())
-
-    return report

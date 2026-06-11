@@ -1,234 +1,683 @@
+# import time
+
 # from app.agents.base.base_agent import BaseAgent
-# from app.agents.bedrock.client import BedrockClient
+# from app.agents.denial_ai.llm_denial_agent import LLMDenialAgent
 # from app.websocket.manager import manager
 # from app.services.audit_service import log_audit
 # from app.services.analytics_service import update_metrics
-# from app.ai.ai_suggester import generate_suggestions
-# from app.ai.prompt_enhancer import enhance_prompt
-# import json
-# import re
 
 
 # class DenialAgent(BaseAgent):
-
 #     def __init__(self):
 #         super().__init__()
-#         self.llm = BedrockClient()
+#         self.denial_ai = LLMDenialAgent()
+
+#     def classify_denial(self, claim):
+#         """AI + Rule-based classification"""
+#         denial_code = claim.get("denial_code")
+
+#         mapping = {
+#             "CO-50": {
+#                 "category": "coding_error",
+#                 "reason": "Invalid CPT or missing modifiers",
+#                 "confidence": 0.95,
+#                 "auto_fixable": True,
+#             },
+#             "CO-16": {
+#                 "category": "missing_info",
+#                 "reason": "Missing required information",
+#                 "confidence": 0.9,
+#                 "auto_fixable": True,
+#             },
+#             "CO-29": {
+#                 "category": "eligibility",
+#                 "reason": "Patient not eligible",
+#                 "confidence": 0.85,
+#                 "auto_fixable": False,
+#             },
+#         }
+
+#         return mapping.get(
+#             denial_code,
+#             {
+#                 "category": "unknown",
+#                 "reason": "Unknown denial reason",
+#                 "confidence": 0.5,
+#                 "auto_fixable": False,
+#             },
+#         )
+
+#     def auto_correct(self, claim, classification):
+#         """Apply automated fixes"""
+#         if classification["category"] == "coding_error":
+#             claim["modifiers_fixed"] = True
+#             claim["status"] = "corrected"
+#             return "Modifier added and CPT corrected"
+
+#         if classification["category"] == "missing_info":
+#             claim["missing_fields_filled"] = True
+#             claim["status"] = "corrected"
+#             return "Missing fields auto-filled"
+
+#         return None
 
 #     async def run(self, claim):
+#         start_time = time.time()
+#         claim = claim or {}
+#         claim_id = claim.get("claim_id", "UNKNOWN")
 
-#         print("🚫 [DenialAgent] Started")
+#         trace_id = await self.log_start("DenialAgent", claim_id)
 
-#         if claim is None:
-#             raise ValueError("DenialAgent received empty claim")
-
-#         await self.log("[DenialAgent] Bedrock AI analyzing claim")
-#         await manager.send_event("denial", "running")
+#         await manager.send_event("denial", "running", {
+#             "claim_id": claim_id,
+#         })
 
 #         try:
-#             # -------------------------
-#             # Extract CPT + duplicates
-#             # -------------------------
-#             cpt_codes = [s["cpt"] for s in claim.get("services", [])]
+#             # 🔍 Step 1: Classification
+#             classification = self.classify_denial(claim)
 
-#             duplicates = [c for c in set(cpt_codes) if cpt_codes.count(c) > 1]
-
-#             duplicate_warning = (
-#                 f"Duplicate CPT codes detected: {duplicates}" if duplicates else ""
+#             await self.log_step(
+#                 "DenialAgent",
+#                 "Denial Classification",
+#                 classification,
+#                 trace_id=trace_id,
+#                 claim_id=claim_id,
 #             )
 
-#             # -------------------------
-#             # 🧠 ICD AUTO-SUGGEST
-#             # -------------------------
-#             if not claim.get("icd_codes"):
-#                 ai_data = await generate_suggestions(claim)
+#             decision = "auto_fix" if classification["auto_fixable"] and classification["confidence"] > 0.8 else "hitl"
 
-#                 suggested_icd = ai_data.get("icd_codes", [])
+#             await self.log_step(
+#                 "DenialAgent",
+#                 "Decision Engine",
+#                 {"decision": decision},
+#                 trace_id=trace_id,
+#                 claim_id=claim_id,
+#             )
 
-#                 if suggested_icd:
-#                     claim["icd_codes"] = suggested_icd
-#                     claim["icd_applied"] = True
-#                     claim["warnings"] = claim.get("warnings", [])
-#                     claim["warnings"].append("ICD auto-suggested by AI")
+#             suggestion = None
 
-#                     print(f"🧠 ICD Auto-Suggested: {suggested_icd}")
+#             # ⚙️ Step 2: Auto Fix
+#             if decision == "auto_fix":
+#                 suggestion = self.auto_correct(claim, classification)
+#                 claim["resubmission_required"] = True
+#                 claim["status"] = "ready_for_resubmission"
 
-#             # -------------------------
-#             # 🔥 DEFINE BASE PROMPT
-#             # -------------------------
-#             base_prompt = f"""
-# You are a healthcare claims denial prevention AI.
+#             # 👨‍⚕️ Step 3: HITL
+#             else:
+#                 claim["status"] = "requires_manual_review"
+#                 claim["assigned_to"] = "billing_team"
 
-# CPT Codes: {cpt_codes}
-# ICD Codes: {claim.get('icd_codes')}
-
-# Alerts:
-# {duplicate_warning}
-
-# STRICT RULES:
-# - Return ONLY valid JSON
-# - No explanation
-# - No text before or after JSON
-# - No markdown
-
-# Return JSON:
-# {{
-#   "risk_score": 0-1,
-#   "reason": "...",
-#   "suggestion": "..."
-# }}
-# """
-
-#             # -------------------------
-#             # 🔥 ENHANCE PROMPT (FEEDBACK LOOP)
-#             # -------------------------
-#             prompt = enhance_prompt(base_prompt, claim)
-
-#             llm_output = await self.llm.invoke(prompt)
-#             print("🧠 LLM Output:", llm_output)
-
-#             # -------------------------
-#             # 🔥 ROBUST JSON PARSING
-#             # -------------------------
-#             try:
-#                 parsed = json.loads(llm_output)
-#             except:
-#                 try:
-#                     match = re.search(r'\{.*\}', llm_output, re.DOTALL)
-#                     if match:
-#                         parsed = json.loads(match.group().strip())
-#                     else:
-#                         raise ValueError("No JSON found")
-#                 except Exception as e:
-#                     print("❌ LLM Parsing Error:", str(e))
-#                     parsed = {
-#                         "risk_score": 0.5,
-#                         "reason": "Parsing failed",
-#                         "suggestion": llm_output
-#                     }
-
-#             # -------------------------
-#             # Extract values
-#             # -------------------------
-#             risk_score = parsed.get("risk_score", 0.0)
-#             reason = parsed.get("reason", "")
-#             suggestion = parsed.get("suggestion", "")
-
-#             # -------------------------
-#             # Store in claim
-#             # -------------------------
+#             # 📊 Final Risk Object
 #             claim["denial_risk"] = {
-#                 "risk_score": risk_score,
-#                 "reason": reason,
-#                 "suggestion": suggestion
+#                 "risk_score": classification["confidence"],
+#                 "category": classification["category"],
+#                 "reason": classification["reason"],
+#                 "decision": decision,
+#                 "suggestion": suggestion,
 #             }
 
-#             claim["ai_suggestion"] = suggestion
+#             if decision == "hitl" or claim.get("resubmission_required") or claim.get("status") in {"denied", "requires_manual_review", "ready_for_resubmission"}:
+#                 denial_ai_state = await self.denial_ai.run(claim, claim["denial_risk"])
+#                 claim = denial_ai_state.get("claim", claim)
+#                 if classification["auto_fixable"]:
+#                     claim = self.denial_ai.auto_fix(claim, claim.get("denial_ai", {}))
+#                     claim["resubmission_required"] = True
 
-#             update_metrics("denial")
+#             claim["denial_checked"] = True
 
-#             # -------------------------
-#             # Audit
-#             # -------------------------
+#             # 📦 Audit Logging
 #             log_audit(
-#                 claim.get("claim_id"),
+#                 claim_id,
 #                 "denial",
 #                 "completed",
 #                 {
-#                     "risk_score": risk_score,
-#                     "reason": reason,
-#                     "suggestion": suggestion,
-#                     "duplicates": duplicates,
-#                     "icd_codes": claim.get("icd_codes")
-#                 }
+#                     "claim_id": claim_id,
+#                     **claim["denial_risk"],
+#                     "trace_id": trace_id,
+#                 },
 #             )
 
-#             await manager.send_event("denial", "completed", parsed)
+#             await manager.send_event(
+#                 "denial",
+#                 "completed",
+#                 {
+#                     **claim["denial_risk"],
+#                     "trace_id": trace_id,
+#                 },
+#             )
+#             update_metrics(
+#                 event_type="denial_completed",
+#                 claim_id=claim_id,
+#                 agent="DENIAL",
+#                 payer=claim.get("payer"),
+#                 risk_score=claim.get("denial_risk", {}).get("risk_score", claim.get("risk_score", 0)),
+#                 latency=time.time() - start_time,
+#                 status="COMPLETED",
+#             )
+
+#             await self.log_end(
+#                 "DenialAgent",
+#                 "SUCCESS",
+#                 time.time() - start_time,
+#                 trace_id=trace_id,
+#                 claim_id=claim_id,
+#             )
 
 #             return {
 #                 "claim": claim,
-
+#                 "denial_risk": claim.get("denial_risk"),
 #                 "pipeline": {
 #                     "steps": {
-#                         "denial_checked": True
+#                         "denial_checked": True,
+#                         "denial_ai_analyzed": bool(claim.get("denial_ai")),
+#                         "appeal_generated": bool(claim.get("denial_ai", {}).get("appeal_text")),
+#                         "resubmission_required": claim.get("resubmission_required", False),
 #                     }
 #                 },
-
-#                 "stage": "denial_checked"
+#                 "stage": "denial_processed",
+#                 "trace_id": trace_id,
 #             }
 
-#         except Exception as e:
-#             print("❌ DenialAgent Error:", str(e))
-
-#             log_audit(
-#                 claim.get("claim_id"),
-#                 "denial",
-#                 "failed",
-#                 {"error": str(e)}
+#         except Exception as error:
+#             await self.log_error(
+#                 "DenialAgent",
+#                 error,
+#                 trace_id=trace_id,
+#                 claim_id=claim_id,
 #             )
 
-#             await manager.send_event("denial", "failed", {"error": str(e)})
+#             log_audit(
+#                 claim_id,
+#                 "denial",
+#                 "failed",
+#                 {"claim_id": claim_id, "error": str(error), "trace_id": trace_id},
+#             )
+
+#             await manager.send_event(
+#                 "denial",
+#                 "failed",
+#                 {"error": str(error), "trace_id": trace_id},
+#             )
+#             update_metrics(
+#                 event_type="denial_failed",
+#                 claim_id=claim_id,
+#                 agent="DENIAL",
+#                 payer=claim.get("payer"),
+#                 risk_score=claim.get("denial_risk", {}).get("risk_score", claim.get("risk_score", 0)),
+#                 latency=time.time() - start_time,
+#                 status="FAILED",
+#             )
+
+#             await self.log_end(
+#                 "DenialAgent",
+#                 "FAILED",
+#                 time.time() - start_time,
+#                 trace_id=trace_id,
+#                 claim_id=claim_id,
+#             )
 
 #             raise
 
+
+import time
+
 from app.agents.base.base_agent import BaseAgent
+from app.agents.denial_ai.llm_denial_agent import LLMDenialAgent
 from app.websocket.manager import manager
 from app.services.audit_service import log_audit
+from app.services.analytics_service import update_metrics
 
 
 class DenialAgent(BaseAgent):
+    def __init__(self):
+        super().__init__()
+        self.denial_ai = LLMDenialAgent()
 
     async def run(self, claim):
+        start_time = time.time()
+        started_at = self._utc_now()
+        claim = claim or {}
+        claim_id = claim.get("claim_id", "UNKNOWN")
 
-        print("🚫 [DenialAgent] Started")
+        print("\n" + "=" * 80)
+        print("🚫 [DenialAgent] STARTED")
+        print(f"🧾 Claim ID: {claim_id}")
+        print(f"📥 Incoming claim keys: {list(claim.keys())}")
+        print("=" * 80)
 
-        await manager.send_event("denial", "running")
+        trace_id = await self.log_start("DenialAgent", claim_id)
+
+        await manager.send_event("denial", "running", {
+            "claim_id": claim_id,
+            "trace_id": trace_id,
+            "message": "Denial Agent started",
+            "stage": "DENIAL",
+            "current_stage": "DENIAL",
+            "current_agent": "DenialAgent",
+            "active_step": "denial",
+            "progress": 80,
+            "pipeline_state": "DENIAL_RUNNING",
+            "pipeline_status": "RUNNING",
+        })
 
         try:
-            # Check if claim was denied
-            if claim.get("status") == "denied":
-                print(f"⚠️ Claim denied (Code: {claim.get('denial_code')}). Applying AI correction...")
-                
-                reason = "Invalid CPT or missing modifiers" if claim.get("denial_code") == "CO-50" else "Unknown reasoning"
-                suggestion = "Auto-corrected modifier and rebilled"
-                
-                claim["denial_risk"] = {
-                    "risk_score": 0.95,
-                    "reason": reason,
-                    "suggestion": suggestion
-                }
-                
-                # Auto-correct Claim
-                claim["status"] = "corrected"
-            else:
-                claim["denial_risk"] = {
-                    "risk_score": 0.1,
-                    "reason": "Clear to pay",
-                    "suggestion": None
-                }
+            print("➡️ [1] Checking whether claim is denied...")
 
-            claim["denial_checked"] = True
+            status = str(claim.get("status") or "").lower()
+            ack = claim.get("ack") or claim.get("acknowledgment") or {}
+            submission = claim.get("submission") or {}
 
-            log_audit(
-                claim.get("claim_id"),
-                "denial",
-                "completed",
-                claim.get("denial_risk")
+            raw_response = (
+                ack.get("raw_response")
+                or ack.get("raw")
+                or {}
             )
 
-            await manager.send_event("denial", "completed", claim.get("denial_risk"))
+            denial_code = (
+                claim.get("denial_code")
+                or ack.get("denial_code")
+                or raw_response.get("denial_code")
+                or submission.get("denial_code")
+            )
+
+            clearinghouse_status = str(
+                raw_response.get("status")
+                or submission.get("status")
+                or ""
+            ).upper()
+
+            denial_found = (
+                status == "denied"
+                or bool(denial_code)
+                or clearinghouse_status == "DENIED"
+            )
+
+            print(f"📌 Claim status: {status}")
+            print(f"📌 Clearinghouse status: {clearinghouse_status}")
+            print(f"📌 Denial code: {denial_code}")
+            print(f"📌 Denial found: {denial_found}")
+
+            await self.log_step(
+                "DenialAgent",
+                "Denial presence check",
+                {
+                    "claim_status": status,
+                    "clearinghouse_status": clearinghouse_status,
+                    "denial_code": denial_code,
+                    "denial_found": denial_found,
+                },
+                trace_id=trace_id,
+                claim_id=claim_id,
+            )
+
+            # ---------------------------------------------------
+            # No denial path
+            # ---------------------------------------------------
+            if not denial_found:
+                print("✅ No denial found")
+
+                duration_seconds = round(time.time() - start_time, 2)
+
+                denial_payload = {
+                    "claim_id": claim_id,
+                    "agent": "DenialAgent",
+                    "status": "completed",
+                    "denial_found": False,
+                    "denial_code": None,
+                    "denial_type": None,
+                    "reason": "No denial found for this claim",
+                    "risk_score": 0,
+                    "risk_score_percent": 0,
+                    "suggestions": [],
+                    "appeal": None,
+                    "duration_seconds": duration_seconds,
+                    "next_agent": "Payment Agent",
+                    "trace_id": trace_id,
+                }
+
+                claim["denial"] = denial_payload
+                claim["denial_risk"] = {
+                    "risk_score": 0,
+                    "reason": "No denial found",
+                    "suggestion": None,
+                }
+                claim["denial_checked"] = True
+                claim["denial_found"] = False
+                claim["denial_duration_seconds"] = duration_seconds
+
+                agent_detail = self.build_agent_detail(
+                    "denial",
+                    status="COMPLETED",
+                    active_step="Denial check completed",
+                    message="No denial found for this claim",
+                    started_at=started_at,
+                    duration_seconds=duration_seconds,
+                    passed=True,
+                    risk_score=0,
+                    risk_score_percent=0,
+                    output=denial_payload,
+                    next_agent="Payment Agent",
+                )
+                self.apply_agent_detail(
+                    claim,
+                    "denial",
+                    agent_detail,
+                    step_completed=True,
+                    result_status="NO_DENIAL",
+                )
+
+                log_audit(
+                    claim_id,
+                    "denial",
+                    "completed",
+                    denial_payload,
+                )
+
+                await manager.send_event(
+                    "denial",
+                    "completed",
+                    self.build_agent_event_payload(
+                        "denial",
+                        claim_id,
+                        agent_detail,
+                        existing_payload=denial_payload,
+                        result_status="NO_DENIAL",
+                    ),
+                )
+
+                update_metrics(
+                    event_type="denial_completed",
+                    claim_id=claim_id,
+                    agent="DENIAL",
+                    payer=claim.get("payer"),
+                    risk_score=0,
+                    latency=duration_seconds,
+                    status="NO_DENIAL",
+                )
+
+                await self.log_end(
+                    "DenialAgent",
+                    "NO_DENIAL",
+                    duration_seconds,
+                    trace_id=trace_id,
+                    claim_id=claim_id,
+                )
+
+                print(f"⏱️ Denial duration: {duration_seconds}s")
+                print("⏭️ Next agent: Payment Agent")
+                print("=" * 80 + "\n")
+
+                return {
+                    "claim": claim,
+                    "denial_risk": claim.get("denial_risk"),
+                    "denial": denial_payload,
+                    "pipeline": {
+                        "steps": {
+                            "denial_checked": True,
+                            "denial_ai_analyzed": False,
+                            "appeal_generated": False,
+                            "resubmission_required": False,
+                        }
+                    },
+                    "stage": "denial_checked",
+                    "status": "NO_DENIAL",
+                    "duration_seconds": duration_seconds,
+                    "trace_id": trace_id,
+                    "agent_detail": agent_detail,
+                }
+
+            # ---------------------------------------------------
+            # Denial found path
+            # ---------------------------------------------------
+            print("⛔ Denial found. Running denial AI analysis...")
+
+            denial_context = {
+                "denial_code": denial_code,
+                "reason": claim.get("denial_reason") or raw_response.get("reason"),
+                "status": "denied",
+            }
+
+            denial_ai_state = await self.denial_ai.run(claim, denial_context)
+
+            claim = denial_ai_state.get("claim", claim)
+            denial_ai = denial_ai_state.get("denial_ai") or claim.get("denial_ai") or {}
+            appeal = denial_ai_state.get("appeal") or {}
+
+            retry_probability = denial_ai.get("retry_probability", 0.45)
+
+            try:
+                risk_score = float(retry_probability)
+            except (TypeError, ValueError):
+                risk_score = 0.45
+
+            risk_score_percent = round(risk_score * 100)
+
+            duration_seconds = round(time.time() - start_time, 2)
+
+            denial_payload = {
+                "claim_id": claim_id,
+                "agent": "DenialAgent",
+                "status": "denied",
+                "denial_found": True,
+                "denial_code": denial_code or denial_ai.get("denial_code"),
+                "denial_type": denial_ai.get("category"),
+                "root_cause": denial_ai.get("root_cause"),
+                "reason": denial_ai.get("denial_reason") or denial_ai.get("root_cause"),
+                "risk_score": risk_score,
+                "risk_score_percent": risk_score_percent,
+                "suggested_corrections": denial_ai.get("suggested_corrections", []),
+                "modifier_suggestions": denial_ai.get("modifier_suggestions", []),
+                "icd_suggestions": denial_ai.get("icd_suggestions", []),
+                "documentation_gaps": denial_ai.get("documentation_gaps", []),
+                "denial_prevention_tips": denial_ai.get("denial_prevention_tips", []),
+                "resubmission_strategy": denial_ai.get("resubmission_strategy"),
+                "appeal": appeal,
+                "appeal_text": denial_ai.get("appeal_text"),
+                "duration_seconds": duration_seconds,
+                "next_agent": "Case Orchestrator",
+                "trace_id": trace_id,
+            }
+
+            claim["denial"] = denial_payload
+            claim["denial_risk"] = {
+                "risk_score": risk_score,
+                "category": denial_payload["denial_type"],
+                "reason": denial_payload["reason"],
+                "suggestion": denial_payload["resubmission_strategy"],
+            }
+            claim["denial_checked"] = True
+            claim["denial_found"] = True
+            claim["denial_duration_seconds"] = duration_seconds
+            claim["status"] = "denied"
+            claim["resubmission_required"] = True
+
+            agent_detail = self.build_agent_detail(
+                "denial",
+                status="WARNING",
+                active_step="Denial analysis completed",
+                message=denial_payload.get("reason") or "Denial detected",
+                started_at=started_at,
+                duration_seconds=duration_seconds,
+                passed=False,
+                risk_score=risk_score,
+                risk_score_percent=risk_score_percent,
+                errors=[denial_payload.get("reason")] if denial_payload.get("reason") else [],
+                warnings=denial_payload.get("denial_prevention_tips", []),
+                output=denial_payload,
+                next_agent="Case Orchestrator",
+            )
+            self.apply_agent_detail(
+                claim,
+                "denial",
+                agent_detail,
+                step_completed=True,
+                result_status="DENIED",
+            )
+
+            log_audit(
+                claim_id,
+                "denial",
+                "denied",
+                denial_payload,
+            )
+
+            await manager.send_event(
+                "denial",
+                "denied",
+                self.build_agent_event_payload(
+                    "denial",
+                    claim_id,
+                    agent_detail,
+                    existing_payload=denial_payload,
+                    result_status="DENIED",
+                ),
+            )
+
+            update_metrics(
+                event_type="denial_detected",
+                claim_id=claim_id,
+                agent="DENIAL",
+                payer=claim.get("payer"),
+                risk_score=risk_score,
+                latency=duration_seconds,
+                status="DENIED",
+            )
+
+            await self.log_end(
+                "DenialAgent",
+                "DENIED",
+                duration_seconds,
+                trace_id=trace_id,
+                claim_id=claim_id,
+            )
+
+            print("⛔ Denial analysis completed")
+            print(f"📌 Denial code: {denial_payload['denial_code']}")
+            print(f"📌 Denial type: {denial_payload['denial_type']}")
+            print(f"📌 Reason: {denial_payload['reason']}")
+            print(f"📊 Risk score: {risk_score_percent}%")
+            print(f"⏱️ Denial duration: {duration_seconds}s")
+            print("⏭️ Next agent: Case Orchestrator")
+            print("=" * 80 + "\n")
 
             return {
                 "claim": claim,
                 "denial_risk": claim.get("denial_risk"),
+                "denial": denial_payload,
                 "pipeline": {
                     "steps": {
-                        "denial_checked": True
+                        "denial_checked": True,
+                        "denial_ai_analyzed": True,
+                        "appeal_generated": bool(denial_payload.get("appeal_text")),
+                        "resubmission_required": True,
                     }
                 },
-                "stage": "denial_checked"
+                "stage": "denied",
+                "status": "DENIED",
+                "duration_seconds": duration_seconds,
+                "trace_id": trace_id,
+                "agent_detail": agent_detail,
             }
 
-        except Exception as e:
-            await manager.send_event("denial", "failed", {"error": str(e)})
-            raise
+        except Exception as error:
+            duration_seconds = round(time.time() - start_time, 2)
+
+            print("❌ [DenialAgent] FAILED")
+            print(f"❌ Error: {str(error)}")
+            print(f"⏱️ Denial duration before failure: {duration_seconds}s")
+            print("=" * 80 + "\n")
+
+            await self.log_error(
+                "DenialAgent",
+                error,
+                trace_id=trace_id,
+                claim_id=claim_id,
+            )
+
+            log_audit(
+                claim_id,
+                "denial",
+                "failed",
+                {
+                    "claim_id": claim_id,
+                    "error": str(error),
+                    "duration_seconds": duration_seconds,
+                    "trace_id": trace_id,
+                },
+            )
+
+            failure_payload = {
+                "claim_id": claim_id,
+                "error": str(error),
+                "duration_seconds": duration_seconds,
+                "next_agent": "Case Orchestrator",
+                "trace_id": trace_id,
+            }
+            agent_detail = self.build_agent_detail(
+                "denial",
+                status="FAILED",
+                active_step="Denial processing failed",
+                message=str(error),
+                started_at=started_at,
+                duration_seconds=duration_seconds,
+                passed=False,
+                errors=[str(error)],
+                output=failure_payload,
+                next_agent="Case Orchestrator",
+            )
+            self.apply_agent_detail(
+                claim,
+                "denial",
+                agent_detail,
+                step_completed=False,
+                result_status="FAILED",
+                failed=True,
+            )
+
+            await manager.send_event(
+                "denial",
+                "failed",
+                self.build_agent_event_payload(
+                    "denial",
+                    claim_id,
+                    agent_detail,
+                    existing_payload=failure_payload,
+                    result_status="FAILED",
+                    failed=True,
+                    error=error,
+                    duration_seconds=duration_seconds,
+                ),
+            )
+
+            update_metrics(
+                event_type="denial_failed",
+                claim_id=claim_id,
+                agent="DENIAL",
+                payer=claim.get("payer"),
+                risk_score=claim.get("risk_score", 0),
+                latency=duration_seconds,
+                status="FAILED",
+            )
+
+            await self.log_end(
+                "DenialAgent",
+                "FAILED",
+                duration_seconds,
+                trace_id=trace_id,
+                claim_id=claim_id,
+            )
+
+            return {
+                "claim": claim,
+                "pipeline": {
+                    "steps": {
+                        "denial_checked": False
+                    }
+                },
+                "stage": "denial_failed",
+                "status": "FAILED",
+                "error": str(error),
+                "duration_seconds": duration_seconds,
+                "trace_id": trace_id,
+                "agent_detail": agent_detail,
+            }

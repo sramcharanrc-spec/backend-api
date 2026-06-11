@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API = "http://127.0.0.1:8000/run-rcm";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API = `${API_URL}/run-rcm`;
 
 export const fetchClaims = async () => {
   const res = await axios.get(`${API}/list`);

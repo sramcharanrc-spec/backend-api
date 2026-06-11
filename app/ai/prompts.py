@@ -1,14 +1,14 @@
-def denial_prompt(claim: dict) -> str:
+# prompts.py
 
+def denial_prompt(claim):
     return f"""
 You are a healthcare RCM expert.
 
-Analyze this claim and predict denial risk.
+Predict denial risk.
 
 Claim:
-- CPT Codes: {[s['cpt'] for s in claim.get('services', [])]}
-- Total Charge: {claim.get('total_charge')}
-- Payer: {claim.get('payer', {}).get('name')}
+CPT: {[s['cpt'] for s in claim.get('services', [])]}
+Charge: {claim.get('total_charge')}
 
 Return JSON:
 {{
@@ -16,4 +16,17 @@ Return JSON:
   "reason": "...",
   "suggestion": "..."
 }}
+"""
+
+
+def enrichment_prompt(data):
+    return f"""
+Strict healthcare assistant.
+
+Fill missing fields only if confident.
+
+Data:
+{data}
+
+Return JSON only.
 """

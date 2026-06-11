@@ -8,7 +8,7 @@ class ClaimHistory(Base):
     __tablename__ = "claim_history"
 
     id = Column(String, primary_key=True)
-    claim_id = Column(String, ForeignKey("claims.id"), nullable=False)
+    claim_id = Column(String, ForeignKey("claims.claim_id"), nullable=False)
     previous_status = Column(String)
     new_status = Column(String)
     changed_by = Column(String)  # system / user id

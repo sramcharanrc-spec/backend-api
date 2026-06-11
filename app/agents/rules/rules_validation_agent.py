@@ -239,7 +239,11 @@ class RulesValidationAgent(BaseAgent):
 
         print("⚙️ [RulesValidationAgent] Started")
 
-        await manager.send_event("rules_validation", "running")
+        claim_id = claim.get("claim_id")
+
+        await manager.send_event("rules_validation", "running", {
+            "claim_id": claim_id,
+        })
 
         errors = []
 
@@ -285,7 +289,10 @@ class RulesValidationAgent(BaseAgent):
         await manager.send_event(
             "rules_validation",
             status,
-            {"errors": errors}
+            {
+                "claim_id": claim_id,
+                "errors": errors,
+            }
         )
 
         # -------------------------
@@ -338,3 +345,52 @@ class RulesValidationAgent(BaseAgent):
 
             "stage": "validated"
         }
+
+def apply_payer_rules(claim):
+    payer = (claim.get("payer", {}) or {}).get("name", "")
+    payer = payer.upper().strip()
+
+    if payer != "MEDICARE":
+        return {
+            "valid": True,
+            "errors": [],
+            "warnings": []
+        }
+
+    errors = []
+    warnings = []
+
+    patient = claim.get("patient") or {}
+    provider = claim.get("provider") or {}
+    services = claim.get("services") or []
+
+    if not patient.get("dob"):
+        errors.append("Patient DOB is required for Medicare")
+
+    if not provider.get("npi"):
+        errors.append("Provider NPI is required for Medicare")
+
+    if not services:
+        errors.append("No services found for Medicare validation")
+
+    for service in services:
+        cpt = (
+            service.get("cpt")
+            or service.get("cpt_code")
+            or service.get("procedure_code")
+        )
+
+        if not cpt:
+            errors.append("Missing CPT code for Medicare service line")
+            continue
+
+        cpt = str(cpt).strip()
+
+        if not cpt.isdigit() or len(cpt) != 5:
+            errors.append(f"Invalid CPT code format for Medicare: {cpt}")
+
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors,
+        "warnings": warnings
+    }
