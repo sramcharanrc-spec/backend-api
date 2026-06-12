@@ -1,0 +1,9 @@
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+key.json
+*.log
+__pycache__/
+*.pyc
+exports/
