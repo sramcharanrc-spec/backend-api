@@ -7,3 +7,9 @@ key.json
 __pycache__/
 *.pyc
 exports/
+frontend/.gitignore
+frontend/ai-bot-tenders-frontend.zip
+frontend/dist/
+frontend/frontend-build.zip
+frontend/setup.py
+frontend/test-unzip/
