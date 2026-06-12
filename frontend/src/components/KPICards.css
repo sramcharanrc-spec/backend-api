@@ -1,0 +1,27 @@
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.kpi-card {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.kpi-card h4 {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.kpi-card p {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.kpi-card.success { border-left: 4px solid #22c55e; }
+.kpi-card.warning { border-left: 4px solid #f59e0b; }
+.kpi-card.revenue { border-left: 4px solid #3b82f6; }

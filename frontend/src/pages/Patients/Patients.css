@@ -1,0 +1,135 @@
+/* ================= ROOT CONTAINER ================= */
+.patients-container {
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8faff, #f3e8ff);
+  font-family: "Inter", sans-serif;
+}
+
+/* ================= HEADER ================= */
+.patients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.patients-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ================= SEARCH ================= */
+.search-input {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 2px #6366f1;
+}
+
+/* ================= TABLE ================= */
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER */
+.patients-table thead {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.patients-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ROWS */
+.patients-table td {
+  padding: 12px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.patients-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.patients-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.08);
+  transform: scale(1.01);
+}
+
+/* ================= BUTTON ================= */
+.generate-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.generate-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.generate-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* ================= STEPPER ================= */
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
+.step-dot.active {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+}
+
+.step-line {
+  height: 2px;
+  flex: 1;
+  background: #d1d5db;
+}
+
+.step-line.active {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+/* ================= TOAST ================= */
+.toast {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-left: 4px solid #6366f1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
